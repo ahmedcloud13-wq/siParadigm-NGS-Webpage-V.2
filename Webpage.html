@@ -1,0 +1,2997 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>siParadigm — Precision Oncology NGS Panels</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --navy-900: #0d1e35;
+            --navy-800: #1a3b69;
+            --navy-700: #1f4a84;
+            --navy-600: #2558a0;
+            --navy-500: #3370bc;
+            --navy-400: #6695cc;
+            --navy-300: #99bade;
+            --navy-200: #ccdaee;
+            --navy-100: #e8eff8;
+            --navy-50: #f2f6fb;
+            --red-900: #6b0e1e;
+            --red-800: #991428;
+            --red-700: #c41935;
+            --red-600: #e84562;
+            --red-500: #ed6a82;
+            --red-400: #f28fa0;
+            --red-300: #f7b4bf;
+            --red-200: #fbd9df;
+            --red-100: #fdeef0;
+            --bg: #ffffff;
+            --surface: #f8fafd;
+            --surface2: #eef3fa;
+            --border: rgba(26, 59, 105, 0.1);
+            --text: #0d1e35;
+            --text-muted: #4a6080;
+            --text-dim: #8ea4be;
+            --accent: #1a3b69;
+            --accent2: #e84562;
+            --accent-glow: rgba(26, 59, 105, 0.08);
+            --red: #e84562;
+            --font-display: 'Plus Jakarta Sans', sans-serif;
+            --font-sans: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ═══════════════════════════════════════
+     SCROLL PROGRESS
+  ═══════════════════════════════════════ */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--navy-800), var(--red-600));
+            z-index: 1001;
+            transition: width 0.1s linear;
+        }
+
+        /* ═══════════════════════════════════════
+     NAVIGATION
+  ═══════════════════════════════════════ */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid transparent;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        nav.scrolled {
+            background: rgba(255, 255, 255, 0.92);
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 8px 40px rgba(13, 30, 53, 0.08);
+        }
+
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            padding: 0 48px;
+            height: 76px;
+            gap: 0;
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        .nav-logo-wrap {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+            margin-right: 48px;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .nav-logo-wrap:hover {
+            transform: scale(1.03) rotate(-1deg);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: stretch;
+            list-style: none;
+            height: 100%;
+            flex: 1;
+            gap: 0;
+        }
+
+        .nav-links li {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .nav-links a {
+            font-family: var(--font-sans);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--navy-800);
+            text-decoration: none;
+            padding: 0 20px;
+            height: 76px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.3s ease;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            right: 20px;
+            height: 2px;
+            background: var(--red-600);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .nav-links a:hover {
+            color: var(--red-600);
+        }
+
+        .nav-links a:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .nav-links a.nav-active {
+            color: var(--red-600);
+            font-weight: 600;
+        }
+
+        .nav-links a.nav-active::after {
+            transform: scaleX(1);
+        }
+
+        .nav-chevron {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            position: relative;
+            flex-shrink: 0;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .nav-links li:hover .nav-chevron {
+            transform: rotate(90deg) scale(1.2);
+        }
+
+        .nav-chevron::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 0;
+            border: solid currentColor;
+            border-width: 0 1.5px 1.5px 0;
+            display: inline-block;
+            padding: 2.5px;
+            transform: rotate(45deg);
+        }
+
+        .nav-cta {
+            font-family: var(--font-sans);
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+            background: var(--red-600);
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+            margin-left: 24px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            letter-spacing: 0.01em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-cta::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.2) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .nav-cta:hover {
+            background: var(--red-700);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(232, 69, 98, 0.4);
+        }
+
+        .nav-cta:hover::before {
+            opacity: 1;
+        }
+
+        .nav-cta:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        /* ═══════════════════════════════════════
+     HERO
+  ═══════════════════════════════════════ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 120px 48px 100px;
+            position: relative;
+            overflow: hidden;
+            background: var(--bg);
+        }
+
+        #heroCanvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .hero-gradient-1 {
+            position: absolute;
+            top: -20%;
+            right: -10%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(232, 69, 98, 0.08) 0%, transparent 60%);
+            border-radius: 50%;
+            filter: blur(60px);
+            animation: float1 20s ease-in-out infinite;
+        }
+
+        .hero-gradient-2 {
+            position: absolute;
+            bottom: -30%;
+            left: -15%;
+            width: 900px;
+            height: 900px;
+            background: radial-gradient(circle, rgba(26, 59, 105, 0.1) 0%, transparent 60%);
+            border-radius: 50%;
+            filter: blur(80px);
+            animation: float2 25s ease-in-out infinite;
+        }
+
+        .hero-mouse-gradient {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(232, 69, 98, 0.12) 0%, transparent 60%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            filter: blur(40px);
+        }
+
+        .hero-grid-bg {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(26, 59, 105, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(26, 59, 105, 0.03) 1px, transparent 1px);
+            background-size: 80px 80px;
+            mask-image: radial-gradient(ellipse 70% 50% at 60% 60%, black 20%, transparent 100%);
+            -webkit-mask-image: radial-gradient(ellipse 70% 50% at 60% 60%, black 20%, transparent 100%);
+            animation: gridFade 3s ease forwards;
+            opacity: 0;
+            z-index: 0;
+        }
+
+        @keyframes gridFade {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes float1 {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            33% {
+                transform: translate(-30px, 40px) rotate(5deg);
+            }
+
+            66% {
+                transform: translate(20px, -30px) rotate(-3deg);
+            }
+        }
+
+        @keyframes float2 {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            50% {
+                transform: translate(40px, -50px) rotate(8deg);
+            }
+        }
+
+        .hero-content {
+            max-width: 1344px;
+            width: 100%;
+            margin: 0 auto;
+            padding-left: 44px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-tag {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: heroReveal 1s 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .hero-tag::before {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 1px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+        }
+
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(40px, 6vw, 84px);
+            font-weight: 700;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            max-width: 1100px;
+            color: var(--navy-900);
+            opacity: 0;
+            transform: translateY(40px);
+            animation: heroReveal 1s 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .hero-title em {
+            font-style: italic;
+            color: var(--red-600);
+            position: relative;
+        }
+
+        .hero-title em::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--red-600);
+            transform: scaleX(0);
+            transform-origin: left;
+            animation: underlineReveal 1.2s 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes underlineReveal {
+            to {
+                transform: scaleX(1);
+            }
+        }
+
+        .hero-sub {
+            margin-top: 32px;
+            font-size: 18px;
+            color: var(--text-muted);
+            max-width: 600px;
+            line-height: 1.75;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: heroReveal 1s 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .hero-stats {
+            margin-top: 64px;
+            display: flex;
+            gap: 0;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: heroReveal 1s 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .hero-stat {
+            padding: 28px 36px;
+            border-left: 1px solid var(--border);
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .hero-stat:first-child {
+            border-left: none;
+            padding-left: 0;
+        }
+
+        .hero-stat:hover {
+            background: var(--accent-glow);
+            transform: translateY(-4px);
+        }
+
+        .hero-stat::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 36px;
+            right: 36px;
+            height: 2px;
+            background: var(--red-600);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .hero-stat:hover::after {
+            transform: scaleX(1);
+        }
+
+        .hero-stat-num {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 38px;
+            color: var(--navy-800);
+            line-height: 1;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--navy-800), var(--red-600));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-stat-label {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        @keyframes heroReveal {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ═══════════════════════════════════════
+     LEGEND BAR
+  ═══════════════════════════════════════ */
+        .legend-bar {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            padding: 20px 48px;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(90deg, var(--surface), var(--bg), var(--surface));
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .legend-label {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            white-space: nowrap;
+            flex-shrink: 0;
+            font-weight: 600;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-sans);
+            font-size: 11px;
+            letter-spacing: 0.06em;
+            white-space: nowrap;
+            flex-shrink: 0;
+            color: var(--text-muted);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 8px 16px;
+            border-radius: 24px;
+            border: 1px solid transparent;
+        }
+
+        .legend-item:hover {
+            color: var(--navy-800);
+            background: var(--accent-glow);
+            border-color: var(--border);
+            transform: translateY(-2px);
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+
+        .legend-dot::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            border: 1px solid currentColor;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform: scale(0.5);
+        }
+
+        .legend-item:hover .legend-dot::after {
+            opacity: 0.3;
+            transform: scale(1.2);
+        }
+
+        .legend-item:hover .legend-dot {
+            transform: scale(1.3);
+            box-shadow: 0 0 12px currentColor;
+        }
+
+        /* ═══════════════════════════════════════
+     SECTION
+  ═══════════════════════════════════════ */
+        .section {
+            padding: 140px 48px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-inner {
+            max-width: 1344px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-header {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 24px;
+            align-items: start;
+            margin-bottom: 72px;
+        }
+
+        .section-number {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--red-600);
+            font-weight: 500;
+            padding-top: 8px;
+        }
+
+        .section-title-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(32px, 4vw, 52px);
+            line-height: 1.1;
+            color: var(--navy-900);
+            letter-spacing: -0.02em;
+        }
+
+        .section-desc {
+            max-width: 720px;
+            color: var(--text-muted);
+            font-size: 16px;
+            line-height: 1.8;
+            margin-top: 20px;
+        }
+
+        .dna-accent {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 20px;
+        }
+
+        .dna-node-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            animation: dnaPulse 2s ease-in-out infinite;
+        }
+
+        .dna-node-dot:nth-child(1) {
+            background: var(--navy-800);
+            animation-delay: 0s;
+        }
+
+        .dna-node-dot:nth-child(2) {
+            background: var(--red-600);
+            animation-delay: 0.2s;
+        }
+
+        .dna-node-dot:nth-child(3) {
+            background: var(--navy-600);
+            animation-delay: 0.4s;
+        }
+
+        .dna-node-dot:nth-child(4) {
+            background: var(--red-500);
+            animation-delay: 0.6s;
+        }
+
+        .dna-node-dot:nth-child(5) {
+            background: var(--navy-800);
+            animation-delay: 0.8s;
+        }
+
+        .dna-line-accent {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(26, 59, 105, 0.2), rgba(232, 69, 98, 0.1), transparent);
+            margin-left: 8px;
+        }
+
+        @keyframes dnaPulse {
+
+            0%,
+            100% {
+                opacity: 0.2;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.7;
+                transform: scale(1.5);
+            }
+        }
+
+        /* ═══════════════════════════════════════
+     FILTER TABS
+  ═══════════════════════════════════════ */
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 48px;
+            padding: 6px;
+            background: var(--surface);
+            border-radius: 14px;
+            width: fit-content;
+            border: 1px solid var(--border);
+        }
+
+        .filter-btn {
+            font-family: var(--font-sans);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            background: transparent;
+            border: none;
+            padding: 12px 24px;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            white-space: nowrap;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .filter-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .filter-btn:hover {
+            color: var(--navy-800);
+            background: rgba(26, 59, 105, 0.08);
+        }
+
+        .filter-btn:hover::before {
+            opacity: 1;
+        }
+
+        .filter-btn.active {
+            color: #fff;
+            background: var(--navy-800);
+            box-shadow: 0 6px 20px rgba(26, 59, 105, 0.35);
+        }
+
+        .filter-btn.active::before {
+            opacity: 1;
+        }
+
+        /* ═══════════════════════════════════════
+     PANEL CARDS
+  ═══════════════════════════════════════ */
+        .panels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 20px;
+        }
+
+        .panel-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            padding: 32px 32px 72px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            will-change: transform, box-shadow;
+        }
+
+        .panel-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(145deg, rgba(26, 59, 105, 0.04), rgba(232, 69, 98, 0.05));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+            border-radius: 16px;
+        }
+
+        .panel-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--navy-800), var(--red-600));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            border-radius: 16px 16px 0 0;
+        }
+
+        .panel-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(26, 59, 105, 0.2);
+            box-shadow: 0 20px 50px rgba(26, 59, 105, 0.12), 0 8px 20px rgba(232, 69, 98, 0.06);
+        }
+
+        .panel-card:hover::before {
+            opacity: 1;
+        }
+
+        .panel-card:hover::after {
+            transform: scaleX(1);
+        }
+
+        .panel-deco {
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(26, 59, 105, 0.06) 0%, transparent 70%);
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .panel-card:hover .panel-deco {
+            opacity: 1;
+            transform: scale(1.6) translate(-15px, 15px);
+        }
+
+        .panel-cancer-type {
+            font-family: var(--font-sans);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--red-600);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .panel-cancer-type .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--red-600);
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .panel-cancer-type .dot::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: var(--red-600);
+            opacity: 0.15;
+            animation: dotPulse 2.5s ease-in-out infinite;
+        }
+
+        @keyframes dotPulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.15;
+            }
+
+            50% {
+                transform: scale(1.8);
+                opacity: 0;
+            }
+        }
+
+        .panel-name {
+            font-family: var(--font-display);
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 18px;
+            color: var(--navy-900);
+            position: relative;
+            z-index: 1;
+        }
+
+        .panel-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .meta-tag {
+            font-family: var(--font-sans);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            padding: 5px 12px;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            border-radius: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .meta-tag.genes {
+            border-color: rgba(26, 59, 105, 0.25);
+            color: var(--navy-700);
+            background: rgba(26, 59, 105, 0.06);
+        }
+
+        .meta-tag.msi {
+            border-color: rgba(37, 88, 160, 0.25);
+            color: var(--navy-600);
+            background: rgba(37, 88, 160, 0.06);
+        }
+
+        .meta-tag.tmb {
+            border-color: rgba(232, 69, 98, 0.25);
+            color: var(--red-600);
+            background: rgba(232, 69, 98, 0.06);
+        }
+
+        .meta-tag.hrd {
+            border-color: rgba(196, 25, 53, 0.25);
+            color: var(--red-700);
+            background: rgba(196, 25, 53, 0.06);
+        }
+
+        .panel-gene-preview {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid rgba(26, 59, 105, 0.08);
+            position: relative;
+            z-index: 1;
+        }
+
+        .gene-preview-label {
+            font-family: var(--font-sans);
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 10px;
+        }
+
+        .gene-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .gene-chip {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--text-muted);
+            background: var(--surface);
+            padding: 3px 10px;
+            border-radius: 6px;
+            border: 1px solid transparent;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .panel-card:hover .gene-chip {
+            background: rgba(26, 59, 105, 0.08);
+            color: var(--navy-700);
+            border-color: rgba(26, 59, 105, 0.12);
+        }
+
+        .panel-card:hover .gene-chip:hover {
+            transform: translateY(-3px) scale(1.08);
+            background: rgba(232, 69, 98, 0.12);
+            color: var(--red-700);
+            border-color: rgba(232, 69, 98, 0.3);
+            box-shadow: 0 6px 16px rgba(232, 69, 98, 0.2);
+        }
+
+        .gene-chip-more {
+            font-family: var(--font-sans);
+            font-size: 10px;
+            color: var(--text-dim);
+            padding: 3px 8px;
+            font-style: italic;
+        }
+
+        .panel-arrow {
+            position: absolute;
+            bottom: 28px;
+            right: 28px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            font-size: 16px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 1;
+        }
+
+        .panel-card:hover .panel-arrow {
+            background: var(--red-600);
+            border-color: var(--red-600);
+            color: #fff;
+            transform: translate(4px, -4px) rotate(-45deg) scale(1.1);
+            box-shadow: 0 10px 25px rgba(232, 69, 98, 0.4);
+        }
+
+        /* ═══════════════════════════════════════
+     MODAL
+  ═══════════════════════════════════════ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(13, 30, 53, 0.65);
+            backdrop-filter: blur(20px) saturate(150%);
+            -webkit-backdrop-filter: blur(20px) saturate(150%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal {
+            background: #ffffff;
+            box-shadow:
+                0 40px 100px rgba(13, 30, 53, 0.25),
+                0 12px 32px rgba(13, 30, 53, 0.12);
+            max-width: 720px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            border-radius: 24px;
+            transform: scale(0.85) translateY(40px);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+            opacity: 0;
+        }
+
+        .modal-overlay.open .modal {
+            transform: scale(1) translateY(0);
+            opacity: 1;
+        }
+
+        .modal::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .modal::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        .modal::-webkit-scrollbar-thumb:hover {
+            background: var(--text-dim);
+        }
+
+        .modal-header {
+            padding: 40px 40px 32px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            background: linear-gradient(165deg, #fdeef0 0%, #fff5f7 40%, #ffffff 100%);
+            z-index: 1;
+            border-radius: 24px 24px 0 0;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(26, 59, 105, 0.06);
+            border: 1px solid rgba(26, 59, 105, 0.12);
+            color: var(--text-muted);
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 2;
+        }
+
+        .modal-close:hover {
+            background: rgba(232, 69, 98, 0.12);
+            color: var(--red-600);
+            border-color: rgba(232, 69, 98, 0.35);
+            transform: rotate(90deg) scale(1.15);
+            box-shadow: 0 8px 20px rgba(232, 69, 98, 0.2);
+        }
+
+        .modal-cancer-label {
+            font-family: var(--font-sans);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--red-600);
+            margin-bottom: 10px;
+        }
+
+        .modal-panel-name {
+            font-family: var(--font-display);
+            font-size: 30px;
+            font-weight: 800;
+            color: var(--navy-900);
+            line-height: 1.2;
+            margin-bottom: 18px;
+        }
+
+        .modal-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .modal-pill {
+            font-family: var(--font-sans);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 24px;
+            border: 1.5px solid;
+            line-height: 1;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+        }
+
+        .modal-pill:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-pill-genes {
+            color: var(--navy-800);
+            border-color: rgba(26, 59, 105, 0.3);
+            background: rgba(26, 59, 105, 0.06);
+        }
+
+        .modal-pill-tmb {
+            color: var(--red-600);
+            border-color: rgba(232, 69, 98, 0.35);
+            background: rgba(232, 69, 98, 0.06);
+        }
+
+        .modal-pill-msi {
+            color: var(--navy-600);
+            border-color: rgba(37, 88, 160, 0.35);
+            background: rgba(37, 88, 160, 0.06);
+        }
+
+        .modal-pill-hrd {
+            color: var(--red-700);
+            border-color: rgba(196, 25, 53, 0.35);
+            background: rgba(196, 25, 53, 0.06);
+        }
+
+        .modal-body {
+            padding: 32px 40px 44px;
+        }
+
+        .modal-section-title {
+            font-family: var(--font-sans);
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 14px;
+            margin-top: 32px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-section-title::before {
+            content: '';
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--red-600), transparent);
+            border-radius: 1px;
+            flex-shrink: 0;
+        }
+
+        .modal-section-title:first-child {
+            margin-top: 0;
+        }
+
+        .coverage-track {
+            height: 8px;
+            background: var(--surface2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .coverage-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--navy-800), var(--red-600));
+            position: relative;
+            overflow: hidden;
+            transition: width 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .coverage-fill::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.6) 50%, transparent 100%);
+            animation: shimmer 2.5s infinite;
+        }
+
+        @keyframes shimmer {
+            from {
+                transform: translateX(-100%);
+            }
+
+            to {
+                transform: translateX(200%);
+            }
+        }
+
+        .modal-genes-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .modal-gene {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--text);
+            background: #fff;
+            border: 1.5px solid rgba(26, 59, 105, 0.18);
+            padding: 7px 14px;
+            border-radius: 10px;
+            cursor: default;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-gene:hover {
+            background: var(--surface);
+            border-color: rgba(26, 59, 105, 0.4);
+            color: var(--navy-700);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(26, 59, 105, 0.12);
+        }
+
+        .modal-gene.starred {
+            color: var(--navy-800);
+            border-color: rgba(26, 59, 105, 0.3);
+            background: var(--surface);
+            font-weight: 500;
+        }
+
+        .modal-gene.starred::before {
+            content: '*';
+            color: var(--red-600);
+            margin-right: 2px;
+            font-weight: 700;
+        }
+
+        .modal-gene.starred:hover {
+            background: var(--navy-100);
+            border-color: var(--navy-600);
+            box-shadow: 0 8px 24px rgba(26, 59, 105, 0.18);
+        }
+
+        .modal-tests-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .modal-test {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--font-sans);
+            font-size: 13px;
+            font-weight: 500;
+            padding: 10px 18px;
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            color: var(--text);
+            background: var(--surface);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+        }
+
+        .modal-test:hover {
+            background: var(--surface2);
+            border-color: rgba(26, 59, 105, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(26, 59, 105, 0.1);
+        }
+
+        .modal-test .test-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* ═══════════════════════════════════════
+     HEREDITARY SECTION
+  ═══════════════════════════════════════ */
+        .hereditary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .hered-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            padding: 36px;
+            border-radius: 20px;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+        }
+
+        .hered-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, var(--navy-800), var(--red-600));
+            border-radius: 20px 0 0 20px;
+            transform: scaleY(0);
+            transform-origin: bottom;
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .hered-card::after {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(232, 69, 98, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            opacity: 0;
+        }
+
+        .hered-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(26, 59, 105, 0.2);
+            box-shadow: 0 24px 60px rgba(26, 59, 105, 0.12), 0 8px 24px rgba(232, 69, 98, 0.06);
+        }
+
+        .hered-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .hered-card:hover::after {
+            opacity: 1;
+            transform: scale(1.4);
+        }
+
+        .hered-icon {
+            font-size: 10px;
+            font-family: var(--font-sans);
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--red-600);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .hered-icon::before {
+            content: '';
+            display: block;
+            width: 12px;
+            height: 2px;
+            background: var(--red-600);
+            border-radius: 1px;
+        }
+
+        .hered-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 18px;
+            line-height: 1.3;
+            margin-bottom: 10px;
+            color: var(--navy-900);
+        }
+
+        .hered-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .hered-genes-label {
+            font-family: var(--font-sans);
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+        }
+
+        .hered-genes-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .hered-gene {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            color: var(--text-muted);
+            background: var(--surface);
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .hered-card:hover .hered-gene {
+            background: rgba(26, 59, 105, 0.06);
+            border-color: rgba(26, 59, 105, 0.1);
+            color: var(--navy-700);
+        }
+
+        .hered-card:hover .hered-gene:hover {
+            transform: translateY(-2px) scale(1.05);
+            background: rgba(232, 69, 98, 0.08);
+            color: var(--red-600);
+            border-color: rgba(232, 69, 98, 0.2);
+            box-shadow: 0 4px 10px rgba(232, 69, 98, 0.12);
+        }
+
+        .hered-gene-count-row {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .hered-gene-count {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 32px;
+            color: var(--navy-800);
+            line-height: 1;
+            background: linear-gradient(135deg, var(--navy-800), var(--red-600));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hered-gene-label {
+            font-family: var(--font-sans);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-dim);
+            font-weight: 600;
+        }
+
+        .hered-brca {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, var(--surface) 0%, rgba(232, 69, 98, 0.04) 100%);
+            border-color: rgba(26, 59, 105, 0.12);
+            display: flex;
+            align-items: center;
+            gap: 48px;
+            padding: 48px;
+        }
+
+        .hered-brca:hover {
+            background: linear-gradient(135deg, rgba(26, 59, 105, 0.07) 0%, rgba(232, 69, 98, 0.07) 100%);
+        }
+
+        .brca-badge {
+            font-family: var(--font-display);
+            font-size: 72px;
+            font-weight: 700;
+            font-style: italic;
+            line-height: 1;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--navy-800) 40%, var(--red-500));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0.5;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .hered-brca:hover .brca-badge {
+            opacity: 1;
+            transform: scale(1.08) rotate(-2deg);
+        }
+
+        /* ═══════════════════════════════════════
+     HEMATOLOGY SECTION — WITH SEE MORE
+  ═══════════════════════════════════════ */
+        .hem-panels {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .hem-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            padding: 32px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 20px;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            cursor: default;
+        }
+
+        .hem-card::before {
+            content: attr(data-num);
+            position: absolute;
+            top: -10px;
+            right: -5px;
+            font-family: var(--font-sans);
+            font-weight: 700;
+            font-size: 100px;
+            color: rgba(26, 59, 105, 0.03);
+            line-height: 1;
+            pointer-events: none;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .hem-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--navy-800), var(--red-600));
+            opacity: 0;
+            transition: opacity 0.4s;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .hem-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(232, 69, 98, 0.2);
+            box-shadow: 0 20px 50px rgba(26, 59, 105, 0.12), 0 6px 16px rgba(232, 69, 98, 0.08);
+        }
+
+        .hem-card:hover::before {
+            color: rgba(26, 59, 105, 0.06);
+            transform: scale(1.1) rotate(-8deg);
+        }
+
+        .hem-card:hover::after {
+            opacity: 1;
+        }
+
+        .hem-type {
+            font-family: var(--font-sans);
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--red-600);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hem-type::before {
+            content: '';
+            display: block;
+            width: 12px;
+            height: 2px;
+            background: var(--red-600);
+            border-radius: 1px;
+        }
+
+        .hem-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 16px;
+            line-height: 1.3;
+            margin-bottom: 16px;
+            color: var(--navy-900);
+        }
+
+        .hem-genes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: auto;
+        }
+
+        .hem-gene {
+            font-family: var(--font-mono);
+            font-size: 9px;
+            color: var(--text-dim);
+            background: var(--surface);
+            padding: 2px 7px;
+            border-radius: 3px;
+            border: 1px solid transparent;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .hem-gene.starred {
+            color: var(--navy-700);
+            background: rgba(232, 69, 98, 0.06);
+            border-color: rgba(232, 69, 98, 0.15);
+            font-weight: 500;
+        }
+
+        .hem-gene.starred::before {
+            content: '*';
+            color: var(--red-600);
+            margin-right: 1px;
+        }
+
+        .hem-card:hover .hem-gene {
+            background: rgba(26, 59, 105, 0.08);
+            color: var(--navy-700);
+            border-color: rgba(26, 59, 105, 0.12);
+        }
+
+        .hem-card:hover .hem-gene.starred {
+            background: rgba(232, 69, 98, 0.1);
+            color: var(--red-700);
+            border-color: rgba(232, 69, 98, 0.25);
+        }
+
+        .hem-card:hover .hem-gene:hover {
+            transform: translateY(-2px) scale(1.1);
+            box-shadow: 0 4px 10px rgba(26, 59, 105, 0.12);
+        }
+
+        /* See More Button */
+        .hem-see-more {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 12px;
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-family: var(--font-sans);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.02em;
+        }
+
+        .hem-see-more:hover {
+            background: var(--surface);
+            border-color: rgba(26, 59, 105, 0.2);
+            color: var(--navy-700);
+        }
+
+        .hem-see-more.active {
+            background: var(--navy-800);
+            border-color: var(--navy-800);
+            color: #fff;
+        }
+
+        .hem-see-more svg {
+            width: 12px;
+            height: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .hem-see-more.active svg {
+            transform: rotate(180deg);
+        }
+
+        /* Hidden genes */
+        .hem-genes .hem-gene.hidden-gene {
+            display: none;
+        }
+
+        .hem-genes.expanded .hem-gene.hidden-gene {
+            display: inline-flex;
+        }
+
+        /* ═══════════════════════════════════════
+     FOOTER
+  ═══════════════════════════════════════ */
+        footer {
+            padding: 80px 48px;
+            border-top: 1px solid var(--border);
+            background: linear-gradient(180deg, var(--bg), var(--surface));
+        }
+
+        .footer-inner {
+            max-width: 1344px;
+            margin: 0 auto;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 48px;
+        }
+
+        .footer-brand {
+            flex-shrink: 0;
+        }
+
+        .footer-logo {
+            margin-bottom: 12px;
+        }
+
+        .footer-tagline {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--red-600);
+        }
+
+        .footer-note {
+            font-size: 13px;
+            color: var(--text-dim);
+            max-width: 520px;
+            line-height: 1.75;
+        }
+
+        .footer-version {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-dim);
+            text-align: right;
+            line-height: 1.8;
+        }
+
+        /* ═══════════════════════════════════════
+     ANIMATIONS
+  ═══════════════════════════════════════ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 0;
+        }
+
+        /* ═══════════════════════════════════════
+     RESPONSIVE
+  ═══════════════════════════════════════ */
+        @media (max-width: 900px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 100px 24px 80px;
+            }
+
+            .section {
+                padding: 100px 24px;
+            }
+
+            .nav-inner {
+                padding: 0 24px;
+            }
+
+            .legend-bar {
+                padding: 16px 24px;
+            }
+
+            .hero-stats {
+                flex-wrap: wrap;
+                gap: 0;
+            }
+
+            .hero-stat {
+                padding: 20px 24px;
+            }
+
+            .panels-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hereditary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hem-panels {
+                grid-template-columns: 1fr;
+            }
+
+            .hered-brca {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-inner {
+                flex-direction: column;
+            }
+
+            .filter-bar {
+                flex-wrap: wrap;
+                width: 100%;
+            }
+
+            .filter-btn {
+                flex: 1;
+                text-align: center;
+                padding: 12px 16px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hero-stat {
+                border-left: none;
+                border-top: 1px solid var(--border);
+                padding: 20px 0;
+            }
+
+            .hero-stat:first-child {
+                border-top: none;
+            }
+
+            .modal {
+                border-radius: 20px;
+            }
+
+            .modal-header {
+                padding: 28px 24px 24px;
+                border-radius: 20px 20px 0 0;
+            }
+
+            .modal-body {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Scroll Progress -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- NAV -->
+    <nav id="mainNav">
+        <div class="nav-inner">
+            <div class="nav-logo-wrap">
+                <svg height="48" aria-label="siParadigm Diagnostic Informatics" xmlns="http://www.w3.org/2000/svg" id="Layer_2" data-name="Layer 2" viewBox="0 0 658.68 123.69"><defs><style>.cls-1{fill:#1a3b69}.cls-2{fill:#003b71}.cls-5{fill:#de4562}</style></defs><g id="Layer_1-2" data-name="Layer 1"><path d="M123.94 61.84c0 26.94-17.26 49.84-41.34 58.32a62 62 0 0 0 20.63 3.52c34.23 0 61.97-27.69 61.97-61.84S137.45 0 103.23 0C96 0 89.06 1.25 82.6 3.52c24.08 8.48 41.34 31.38 41.34 58.32" class="cls-1"/><path d="M61.97 123.69c7.23 0 14.17-1.25 20.63-3.52-24.08-8.48-41.34-31.38-41.34-58.32S58.52 12.01 82.6 3.52A62 62 0 0 0 61.97 0C27.74 0 0 27.69 0 61.84s27.74 61.84 61.97 61.84" class="cls-5"/><path d="M82.6 28.25h48.32c3.35 0 6.06 2.71 6.06 6.05s-2.72 6.05-6.06 6.05H82.6c-3.35 0-6.06-2.71-6.06-6.05s2.71-6.05 6.06-6.05" class="cls-5"/><path d="M34.28 80.7H82.6c3.35 0 6.06 2.71 6.06 6.05s-2.72 6.05-6.06 6.05H34.28c-3.35 0-6.06-2.71-6.06-6.05s2.72-6.05 6.06-6.05" class="cls-1"/><path d="M198.33 94.89v21.68h-3.96v-1.76c-1 1.39-2.97 2.03-4.54 2.03-3.63 0-6.93-2.82-6.93-7.37s3.3-7.37 6.93-7.37c1.63 0 3.54.61 4.54 2.03v-9.25h3.96Zm-4.08 14.58c0-2.18-1.82-3.64-3.66-3.64-2 0-3.66 1.55-3.66 3.64s1.66 3.67 3.66 3.67 3.66-1.52 3.66-3.67m15.34-11.95c0-1.33 1.15-2.36 2.51-2.36s2.51 1.03 2.51 2.36-1.12 2.4-2.51 2.4-2.51-1.06-2.51-2.4m.55 4.91h3.97v14.13h-3.97zm30.36 0v14.13h-3.96v-1.76c-1 1.39-2.97 2.03-4.54 2.03-3.63 0-6.93-2.82-6.93-7.37s3.3-7.37 6.93-7.37c1.63 0 3.54.61 4.54 2.03v-1.7h3.96Zm-4.09 7.04c0-2.18-1.82-3.64-3.66-3.64-2 0-3.66 1.55-3.66 3.64s1.66 3.67 3.66 3.67 3.66-1.52 3.66-3.67m30.48-7.04v12.19c0 6.18-3.12 9.06-8.11 9.06-3.03 0-5.66-1.7-6.87-4.3l3.3-1.43c.61 1.27 2.06 2.18 3.57 2.18 2.54 0 4.15-1.39 4.15-5.09v-.21c-1.03 1.37-2.97 2-4.54 2-3.63 0-6.93-2.82-6.93-7.37s3.3-7.37 6.93-7.37c1.6 0 3.51.64 4.54 2v-1.67h3.97Zm-4.09 7.04c0-2.18-1.82-3.64-3.66-3.64-2 0-3.66 1.55-3.66 3.64s1.66 3.67 3.66 3.67 3.66-1.52 3.66-3.67m29.69-.67v7.76h-3.97v-7.34c0-2.24-1.33-3.24-2.69-3.24s-3.18.76-3.18 3.33v7.25h-3.96v-14.13h3.96v2.36c.61-1.91 2.84-2.73 4.24-2.73 3.69 0 5.63 2.49 5.6 6.73Zm10.75.67c0-4.49 3.57-7.4 7.6-7.4s7.6 2.91 7.6 7.4-3.57 7.37-7.6 7.37-7.6-2.91-7.6-7.37m11.16 0c0-2.21-1.6-3.7-3.57-3.7s-3.57 1.49-3.57 3.7 1.6 3.67 3.57 3.67 3.57-1.49 3.57-3.67m14.08 2.54h3.72c0 .82.7 1.7 2.09 1.7 1.15 0 2.03-.49 2.03-1.3 0-.61-.48-.91-1.54-1.18l-1.88-.46c-3.63-.97-4.12-3-4.12-4.49 0-2.18 2.27-4.21 5.54-4.21 2.57 0 5.6 1.27 5.57 4.61h-3.78c0-.94-.79-1.45-1.73-1.45s-1.63.46-1.63 1.18c0 .67.61 1 1.39 1.21l2.33.61c3.39.91 3.81 3.03 3.81 4.18 0 2.97-3.03 4.43-5.93 4.43s-5.84-1.7-5.87-4.82Zm30.99-6.51h-3v11.06h-3.96V105.5h-2.57v-3.06h2.57v-5.18h3.96v5.18h3zm9.84-7.98c0-1.33 1.15-2.36 2.51-2.36s2.51 1.03 2.51 2.36-1.12 2.4-2.51 2.4-2.51-1.06-2.51-2.4m.54 4.91h3.96v14.13h-3.96zm14.89 7.01c0-4.49 3.63-7.37 7.75-7.37 2.57 0 4.63 1.21 5.96 3.03l-2.97 2.09c-.64-.88-1.82-1.43-2.97-1.43-2.24 0-3.75 1.61-3.75 3.67s1.51 3.7 3.75 3.7c1.15 0 2.33-.55 2.97-1.43l2.97 2.09c-1.33 1.85-3.39 3.03-5.96 3.03-4.12 0-7.75-2.91-7.75-7.4Zm38.83-11.92c0-1.33 1.15-2.36 2.51-2.36s2.51 1.03 2.51 2.36-1.12 2.4-2.51 2.4-2.51-1.06-2.51-2.4m.55 4.91h3.96v14.13h-3.96zm29.57 6.37v7.76h-3.97v-7.34c0-2.24-1.33-3.24-2.69-3.24s-3.18.76-3.18 3.33v7.25h-3.96v-14.13h3.96v2.36c.61-1.91 2.84-2.73 4.24-2.73 3.69 0 5.63 2.49 5.6 6.73Zm16.8-7.27v.91h3.09v3.06h-3.09v11.06h-3.97V105.5h-2.66v-3.06h2.66v-.88c0-4.24 2.18-6.67 6.21-6.67h1.69v3.7h-.91c-2.27 0-3 1.24-3.03 2.94Zm12.32 7.94c0-4.49 3.57-7.4 7.6-7.4s7.6 2.91 7.6 7.4-3.57 7.37-7.6 7.37-7.6-2.91-7.6-7.37m11.17 0c0-2.21-1.6-3.7-3.57-3.7s-3.57 1.49-3.57 3.7 1.6 3.67 3.57 3.67 3.57-1.49 3.57-3.67m25.27-6.94-.91 3.79c-.85-.46-1.54-.51-2.03-.51-2.03 0-3.42 1.88-3.42 5.91v4.85h-3.96v-14.13h3.93v3c.79-2.36 2.39-3.36 4.15-3.36.76 0 1.61.12 2.24.45m32.57 6.27v7.76h-4v-7.46c0-2.21-1.15-3.12-2.54-3.12-1.57-.03-2.69.97-2.78 3.09v7.49h-3.97v-7.49c0-2.21-1.15-3.09-2.48-3.09-1.42 0-2.88.67-2.88 3.21v7.37h-3.96v-14.13h3.96v2.52c.42-1.94 2.42-2.88 4-2.88 2.09 0 3.72 1 4.54 2.73 1.09-2.06 3.27-2.73 4.72-2.73 3.54 0 5.39 2.49 5.39 6.73m26.18-6.37v14.13h-3.96v-1.76c-1 1.39-2.97 2.03-4.54 2.03-3.63 0-6.93-2.82-6.93-7.37s3.3-7.37 6.93-7.37c1.63 0 3.54.61 4.54 2.03v-1.7H578Zm-4.09 7.04c0-2.18-1.82-3.64-3.66-3.64-2 0-3.66 1.55-3.66 3.64s1.66 3.67 3.66 3.67 3.66-1.52 3.66-3.67m24.21-3.97h-3v11.06h-3.96V105.5h-2.57v-3.06h2.57v-5.18h3.96v5.18h3zm9.84-7.98c0-1.33 1.15-2.36 2.51-2.36s2.51 1.03 2.51 2.36-1.12 2.4-2.51 2.4-2.51-1.06-2.51-2.4m.54 4.91h3.96v14.13h-3.96zm14.89 7.01c0-4.49 3.63-7.37 7.75-7.37 2.57 0 4.63 1.21 5.96 3.03l-2.97 2.09c-.64-.88-1.82-1.43-2.97-1.43-2.24 0-3.75 1.61-3.75 3.67s1.51 3.7 3.75 3.7c1.15 0 2.33-.55 2.97-1.43l2.97 2.09c-1.33 1.85-3.39 3.03-5.96 3.03-4.12 0-7.75-2.91-7.75-7.4Zm23.49 2.57h3.72c0 .82.7 1.7 2.09 1.7 1.15 0 2.03-.49 2.03-1.3 0-.61-.48-.91-1.54-1.18l-1.88-.46c-3.63-.97-4.12-3-4.12-4.49 0-2.18 2.27-4.21 5.54-4.21 2.57 0 5.6 1.27 5.57 4.61h-3.78c0-.94-.79-1.45-1.73-1.45s-1.63.46-1.63 1.18c0 .67.61 1 1.39 1.21l2.33.61c3.39.91 3.81 3.03 3.81 4.18 0 2.97-3.03 4.43-5.93 4.43s-5.84-1.7-5.87-4.82Z" style="fill:#e54360"/><path d="M232.36 6.91c0-1.94.66-3.57 1.98-4.91 1.32-1.33 2.95-2 4.88-2s3.63.67 4.98 2 2.02 2.97 2.02 4.91-.67 3.59-2.02 4.95q-2.025 2.04-4.98 2.04c-2.955 0-3.53-.68-4.86-2.04s-2-3.01-2-4.95m18.78 0c0-1.94.66-3.57 1.98-4.91 1.32-1.33 2.95-2 4.88-2s3.63.67 4.98 2S265 4.97 265 6.91s-.67 3.59-2.02 4.95q-2.025 2.04-4.98 2.04c-2.955 0-3.53-.68-4.86-2.04s-2-3.01-2-4.95" style="fill:#ca1919"/><path d="m210.87 41.03-9.4-2.17c-1.8-.43-3.11-1.01-3.91-1.74-.71-.65-1.06-1.45-1.06-2.45 0-1.46.54-2.57 1.65-3.39 1.2-.88 2.93-1.33 5.14-1.33 3.44 0 6.43.98 8.88 2.9 2.46 1.93 4.21 4.69 5.18 8.18l.23.81h8.97V21.52h-7.65l-1.99 3.36c-2.07-1.4-4.21-2.48-6.39-3.22-2.53-.86-5.24-1.3-8.04-1.3-5.93 0-10.8 1.51-14.46 4.5-3.73 3.04-5.62 7.07-5.62 11.98 0 4.11 1.43 7.55 4.24 10.23 2.73 2.6 6.91 4.61 12.45 5.97l7.68 1.82c3.08.77 5.23 1.6 6.39 2.47 1.01.76 1.48 1.67 1.48 2.89 0 1.6-.63 2.84-1.93 3.79-1.39 1.02-3.29 1.53-5.67 1.53-4.03 0-7.41-1.11-10.05-3.29-2.64-2.19-4.45-5.42-5.37-9.61l-.19-.87h-9.58v22.19h8.71l1.63-3.79c2.46 1.62 4.88 2.83 7.21 3.6 2.7.89 5.67 1.35 8.85 1.35 6.4 0 11.52-1.51 15.21-4.5 3.76-3.04 5.67-7.24 5.67-12.49 0-4.41-1.51-8.06-4.5-10.83-2.89-2.68-7.52-4.79-13.75-6.29Zm49.94 22.36c-.26-.24-.85-1.15-.85-4.29V22.23h-24.62v9.19h4.95c2.71 0 3.66.5 3.98.8.25.23.83 1.11.83 4.27V59.1c0 3.18-.59 4.07-.84 4.3-.33.3-1.28.82-3.98.82h-4.95v9.14h33.72v-9.14h-4.24c-2.74 0-3.69-.52-4.02-.83Zm74.24-56.76c-4.94-3.31-12.28-4.99-21.84-4.99h-37.68v10.05h5.15c3.85 0 4.76.59 4.94.77s.78 1.04.78 4.55v40.93c0 3.51-.6 4.37-.78 4.55-.19.18-1.09.77-4.95.77h-5.15v10.1h39.49v-10.1h-5.96c-3.9 0-4.83-.61-5.02-.8-.19-.18-.81-1.06-.81-4.52v-16h8.51c6.06 0 10.87-.28 14.29-.82 3.51-.56 6.31-1.52 8.34-2.86 2.77-1.88 4.88-4.22 6.26-6.94 1.37-2.71 2.07-5.91 2.07-9.5 0-6.67-2.57-11.77-7.65-15.18Zm-9.78 15.19c0 3.69-1.1 6.21-3.38 7.7-2.38 1.57-6.7 2.37-12.82 2.37h-5.83v-20.2h5.02c6.86 0 11.49.78 13.78 2.32 2.17 1.46 3.23 4.02 3.23 7.81" style="fill:#163d6c"/><path d="M345.64 43.66c1.92 2.29 1.41 5.4-1.18 6.8-.81.44-1.78.67-2.66.59-3.25-.07-5.62-2.88-5.03-6.21.59-3.4 3.25-5.99 9.69-7.69 1.7-.52 3.47-.81 5.69-.96 12.79-.89 18.41 3.92 18.41 12.27v15.67l.07 2.14c0 1.4.3 2.07.96 2.66.89.74 2 .52 2.44-.44.22-.37.3-.74.59-1.78.15-.67.22-1.63.3-3.77l.07-2.14v-1.04h4.21c0 .52.07 1.04.07 1.55 0 1.55-.07 2.66-.15 3.62-.52 6.8-2.88 9.46-8.21 9.54-4.66.15-7.17-1.63-8.58-5.4-.15-.3-.22-.52-.3-.81-1.11 1.7-2.59 2.88-4.88 3.99-11.39 5.47-20.48 1.18-21.66-5.62-1.48-7.69 1.7-9.83 20.26-13.83l1.18-.22c.67-.15 1.41-.44 2.66-1.26 1.77-1.18 2.51-3.25 1.77-6.28-.52-2.37-2.59-4.07-7.25-4.81-.96-.15-2-.22-3.11-.15-3.47.15-5.54.74-7.47 2 .74.37 1.48.89 2.07 1.55Zm12.94 12.42c-6.58 1.77-7.84 2.14-8.87 2.51-4.36 1.63-5.62 3.7-4.73 7.1.67 2.44 3.11 4.14 6.8 3.99.96 0 1.92-.22 2.88-.59 4.73-1.7 6.73-4.81 6.8-10.35v-3.77c-2.07.89-2.51 1.03-2.88 1.11m22.18-19.07h16.49v5.62c.22-.37.52-.74.81-1.11 3.18-4.21 5.99-5.77 9.32-5.77.59 0 1.18 0 1.78.15 3.62.67 5.77 2.88 6.21 5.84.59 3.77-1.92 6.58-5.03 6.51-3.33-.07-5.47-3.03-4.51-6.14.3-.89.89-1.7 1.63-2.29-2.22-.37-4.29.44-6.65 2.96-2.44 2.59-3.55 5.77-3.55 10.94v11.16c0 3.11.67 3.7 4.44 3.7h4.07v4.88h-24.84v-4.88h3.7c2.96 0 3.7-.66 3.62-3.7l-.07-2.59V45.66c0-3.25-.44-3.7-3.77-3.7h-3.62v-4.95Zm45.25 6.65c1.92 2.29 1.41 5.4-1.18 6.8-.81.44-1.78.67-2.66.59-3.25-.07-5.62-2.88-5.03-6.21.59-3.4 3.25-5.99 9.69-7.69 1.7-.52 3.47-.81 5.69-.96 12.79-.89 18.41 3.92 18.41 12.27v15.67l.07 2.14c0 1.4.3 2.07.96 2.66.89.74 2 .52 2.44-.44.22-.37.3-.74.59-1.78.15-.67.22-1.63.3-3.77l.07-2.14v-1.04h4.21c0 .52.07 1.04.07 1.55 0 1.55-.07 2.66-.15 3.62-.52 6.8-2.88 9.46-8.21 9.54-4.66.15-7.17-1.63-8.58-5.4-.15-.3-.22-.52-.3-.81-1.11 1.7-2.59 2.88-4.88 3.99-11.39 5.47-20.48 1.18-21.66-5.62-1.48-7.69 1.7-9.83 20.26-13.83l1.18-.22c.67-.15 1.41-.44 2.66-1.26 1.77-1.18 2.51-3.25 1.77-6.28-.52-2.37-2.59-4.07-7.25-4.81-.96-.15-2-.22-3.11-.15-3.47.15-5.54.74-7.47 2 .74.37 1.48.89 2.07 1.55Zm12.93 12.42c-6.58 1.77-7.84 2.14-8.87 2.51-4.36 1.63-5.62 3.7-4.73 7.1.67 2.44 3.11 4.14 6.8 3.99.96 0 1.92-.22 2.88-.59 4.73-1.7 6.73-4.81 6.8-10.35v-3.77c-2.07.89-2.51 1.03-2.88 1.11m53.38-27.28c0-3.18-.59-3.7-4.51-3.7h-3.99v-4.88h17.6v44.66c.07 3.11.52 3.7 3.4 3.7h3.47v4.88h-15.9v-5.03c-.22.3-.44.52-.74.74-5.55 5.1-11.76 6.36-18.48 3.7-7.91-3.25-12.12-11.02-10.28-21.88.22-1.18.52-2.37.96-3.55 4.14-11.24 17.74-15.01 27.36-7.17.37.3.74.59 1.11.89V28.81Zm-7.61 40.22c5.1-1.26 8.21-5.77 8.06-14.49-.07-7.25-3.11-11.68-7.54-13.09-6.28-2.07-11.83 1.7-13.16 10.94l-.22 2.51c-.3 10.5 5.92 15.82 12.87 14.12Zm25.5-.44h3.99c2.81 0 3.47-.66 3.4-3.7l-.07-2.51V43.81c-.15-1.26-.96-1.85-2.88-1.85h-4.07v-4.95h16.04v27.87l.07 1.33v.52c.07 1.33.74 1.85 2.44 1.85h3.92v4.88H510.2v-4.88Zm10.94-49.46c1.63-.07 3.18.52 4.44 1.63 2.37 2.14 2.44 5.92.07 8.13-1.11 1.18-2.66 1.78-4.29 1.78-3.33 0-5.91-2.66-5.91-5.77-.07-2.96 2.44-5.62 5.69-5.77m18.26 54.71c-4.44-3.11-4.44-8.36.96-12.2.89-.59 1.7-1.11 2.59-1.48-.3-.22-.52-.44-.81-.67-3.62-3.4-4.95-7.54-3.92-12.35 1.63-7.32 9.24-12.57 21-11.09 3.33.37 6.58 1.48 9.69 3.18.44.22.89.52 1.33.74.07-.3.3-.52.44-.81 1.26-2.07 2.81-3.25 4.66-3.84 4.44-1.33 8.21 1.04 8.87 4.73.15.44.15.96.15 1.4-.07 3.33-2.81 5.32-5.4 4.51-2.88-.96-3.7-3.84-1.55-6.73.07-.22.22-.37.37-.52-1.04-.37-2.14-.15-3.03.74-1.33 1.33-1.55 2.44-1.33 3.99l.07.22.44 1.85c.15.66.3 1.33.37 2 1.03 10.35-6.29 17.37-20.63 16.12-1.85-.15-2.59-.3-6.8-1.33-1.26-.37-2.22 0-3.25 1.7-1.11 1.85-.07 3.92 4.07 4.58 1.33.22 3.11.37 9.83.22h2.44c7.17.07 10.57.74 13.16 1.92 6.06 2.81 7.91 9.98 3.92 14.93-3.33 4.14-10.13 6.8-23.44 6.21-2.51-.07-4.44-.22-6.21-.52-4.07-.67-5.55-1.03-7.32-1.85-5.69-2.74-6.58-8.21-2.59-11.98.52-.44 1.04-.81 1.55-1.18.96-.67 1.78-1.11 2.51-1.41-.66-.22-1.4-.59-2.14-1.11Zm10.5 13.16c2.44.52 6.14.81 9.83.52 1.92-.15 3.47-.37 4.66-.59 3.84-.89 5.25-1.55 6.28-2.74 1.7-1.77 1.26-4.81-.89-6.14-1.18-.66-2.37-.96-7.32-1.4-.22-.07-.44-.07-.74-.07h-2.07l-3.03-.07-8.87-.22h-.74l-.52.07-.52.07c-.96.15-1.77.67-2.74 2.07-.67.96-.96 2.07-.81 3.11.3 2.29 2.29 4.21 7.47 5.4Zm-3.25-34.75c.89 4.07 3.25 6.28 7.84 6.95 1.18.22 2.37.22 3.55.07 5.55-.89 8.65-5.1 7.76-11.46-.59-3.84-3.33-6.65-7.54-7.47-1.33-.3-2.74-.3-4.07 0-4.95.89-7.91 4.66-7.76 9.91 0 .66.07 1.33.22 2" class="cls-2"/><path d="M582.59 68.58h3.99c1.4 0 1.77-.07 2.22-.3 1.18-.59 1.55-1.4 1.55-3.4V45.44c0-3.11-.52-3.7-3.7-3.7h-3.92v-4.73h16.63v4.95c1.85-2.29 4.21-3.99 6.88-5.1.89-.37 1.85-.59 2.74-.81 7.1-1.55 13.16 1.48 15.45 6.58.44-.52.81-.96 1.26-1.41 3.92-4.07 7.91-5.84 12.27-5.84.96 0 1.92.15 2.88.3 6.8 1.33 9.76 4.88 10.42 12.12.07.81.07 1.55.07 2.29v15.6c.15 2.37.74 2.88 2.74 2.88h4.07v4.88h-21.81v-4.88h3.55c1.55 0 2.14-.44 2.29-1.85V50.31c0-1.4 0-2.37-.15-3.18-.67-4.88-5.84-7.54-11.09-4.88-.59.3-1.11.67-1.63 1.04-2.81 2.07-3.99 4.66-3.99 8.5v13.16l.07 1.77c0 1.41.59 1.85 2.07 1.85h3.62v4.88h-20.78v-4.88h3.62c1.48 0 2.07-.52 2.14-1.85l.07-1.11V50.53c0-1.63 0-2.51-.15-3.25-.81-5.03-6.21-7.54-10.94-4.88-1.11.67-2.14 1.48-3.03 2.51-1.85 2.22-2.51 4.29-2.51 7.84v13.97c.07 1.41.66 1.85 2.07 1.85h3.55v4.88h-22.55v-4.88Z" class="cls-2"/></g></svg>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="#solid-tumor" class="nav-active">Precision Oncology <span class="nav-chevron"></span></a>
+                </li>
+                <li><a href="#hematology">Hematopathology <span class="nav-chevron"></span></a></li>
+                <li><a href="#">Services <span class="nav-chevron"></span></a></li>
+                <li><a href="#">For Physicians <span class="nav-chevron"></span></a></li>
+                <li><a href="#">For Patients <span class="nav-chevron"></span></a></li>
+                <li><a href="#">About Us <span class="nav-chevron"></span></a></li>
+            </ul>
+
+            <button class="nav-cta">Contact Us</button>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+        <canvas id="heroCanvas"></canvas>
+        <div class="hero-bg">
+            <div class="hero-gradient-1"></div>
+            <div class="hero-gradient-2"></div>
+            <div class="hero-grid-bg"></div>
+            <div class="hero-mouse-gradient" id="mouseGradient"></div>
+        </div>
+
+        <div class="hero-content">
+            <p class="hero-tag">Disease-Focused NGS Diagnostics — v4.2</p>
+            <h1 class="hero-title">Disease-Focused Next Generation <br>Sequencing<em> (NGS) </em></h1>
+            <p class="hero-sub">Testing for somatic (acquired) gene mutations can help better understand a range of
+                blood and solid tumor cancers. While insights continue to uncover new gene associations and their impact
+                across the continuum of patient care, especially in treatment selection, siParadigm provides panels that
+                deliver the most actionable and relevant information for clinicians..</p>
+
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-num counter" data-target="16">0</div>
+                    <div class="hero-stat-label">Solid Tumor Panels</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-num counter" data-target="48">0</div>
+                    <div class="hero-stat-label">Max Genes / Panel</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-num counter" data-target="4">0</div>
+                    <div class="hero-stat-label">Hematology Panels</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="hero-stat-num">MSI · TMB · HRD</div>
+                    <div class="hero-stat-label">Biomarker Signatures</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LEGEND BAR -->
+    <div class="legend-bar">
+        <div class="legend-label">Biomarker Key</div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background: var(--navy-800);"></div><span>Gene Count</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background: var(--navy-600);"></div><span>MSI — Microsatellite
+                Instability</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background: var(--red-600);"></div><span>TMB — Tumor Mutational Burden</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background: var(--red-700);"></div><span>HRD — Homologous Recombination
+                Deficiency</span>
+        </div>
+        <div
+            style="margin-left: auto; font-family: var(--font-sans); font-size: 10px; color: var(--text-dim); white-space: nowrap; flex-shrink: 0;">
+            Tissue &amp; Liquid Samples Supported</div>
+    </div>
+
+    <!-- SOLID TUMOR SECTION -->
+    <section class="section" id="solid-tumor">
+        <div class="section-inner">
+            <div class="section-header reveal">
+                <div class="section-number">01</div>
+                <div class="section-title-group">
+                    <div class="dna-accent">
+                        <div class="dna-node-dot"></div>
+                        <div class="dna-node-dot"></div>
+                        <div class="dna-node-dot"></div>
+                        <div class="dna-node-dot"></div>
+                        <div class="dna-node-dot"></div>
+                        <div class="dna-line-accent"></div>
+                    </div>
+                    <h2 class="section-title">Solid Tumor Panels (Tissue and Liquid Samples)
+                    </h2>
+                    <p class="section-desc">TEST DESCRIPTIONS: (BIOMARKERS ANALYZED BY TUMOR TYPE).</p>
+                </div>
+            </div>
+
+            <div class="filter-bar reveal">
+                <button class="filter-btn active" onclick="scrollToSection('solid-tumor', this)">Solid Tumor</button>
+                <button class="filter-btn" onclick="scrollToSection('hereditary', this)">Hereditary Cancer</button>
+                <button class="filter-btn" onclick="scrollToSection('hematology', this)">Hematology panels</button>
+            </div>
+
+            <div class="panels-grid" id="panelsGrid"></div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- HEREDITARY SECTION -->
+    <section class="section" id="hereditary">
+        <div class="section-inner">
+            <div class="section-header reveal">
+                <div class="section-number">02</div>
+                <div class="section-title-group">
+                    <div class="dna-accent">
+                        <div class="dna-node-dot"></div>
+                        <div class="dna-node-dot"></div>
+                        <div class="dna-node-dot"></div>
+                        <div class="dna-node-dot"></div>
+                        <div class="dna-node-dot"></div>
+                        <div class="dna-line-accent"></div>
+                    </div>
+                    <h2 class="section-title">Hereditary Cancer Specific Gene Panels</h2>
+                    <p class="section-desc">Full gene sequencing and deletion/duplication analysis for inherited cancer
+                        predisposition. Panels are optimized for clinical indication with reflexive cascade testing
+                        support.</p>
+                </div>
+            </div>
+
+            <div class="hereditary-grid reveal" id="hereditaryGrid"></div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- HEMATOLOGY SECTION -->
+    <section class="section" id="hematology">
+        <div class="section-inner">
+            <div class="section-header reveal">
+                <div class="section-number">03</div>
+                <div class="section-title-group">
+                    <div class="dna-accent">
+                        <div class="dna-node-dot"></div>
+                        <div class="dna-node-dot"></div>
+                        <div class="dna-node-dot"></div>
+                        <div class="dna-node-dot"></div>
+                        <div class="dna-node-dot"></div>
+                        <div class="dna-line-accent"></div>
+                    </div>
+                    <h2 class="section-title">Hematology Panels</h2>
+                    <p class="section-desc">DNA and RNA-based panels covering the molecular landscape of myeloid and
+                        lymphoid malignancies. Enables classification, prognostication, and targeted therapy selection.
+                    </p>
+                </div>
+            </div>
+
+            <div class="hem-panels reveal" id="hemPanels"></div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <svg class="footer-logo" height="40" aria-label="siParadigm" xmlns="http://www.w3.org/2000/svg" id="Layer_2" data-name="Layer 2" viewBox="0 0 658.68 123.69"><defs><style>.cls-1{fill:#1a3b69}.cls-2{fill:#003b71}.cls-5{fill:#de4562}</style></defs><g id="Layer_1-2" data-name="Layer 1"><path d="M123.94 61.84c0 26.94-17.26 49.84-41.34 58.32a62 62 0 0 0 20.63 3.52c34.23 0 61.97-27.69 61.97-61.84S137.45 0 103.23 0C96 0 89.06 1.25 82.6 3.52c24.08 8.48 41.34 31.38 41.34 58.32" class="cls-1"/><path d="M61.97 123.69c7.23 0 14.17-1.25 20.63-3.52-24.08-8.48-41.34-31.38-41.34-58.32S58.52 12.01 82.6 3.52A62 62 0 0 0 61.97 0C27.74 0 0 27.69 0 61.84s27.74 61.84 61.97 61.84" class="cls-5"/><path d="M82.6 28.25h48.32c3.35 0 6.06 2.71 6.06 6.05s-2.72 6.05-6.06 6.05H82.6c-3.35 0-6.06-2.71-6.06-6.05s2.71-6.05 6.06-6.05" class="cls-5"/><path d="M34.28 80.7H82.6c3.35 0 6.06 2.71 6.06 6.05s-2.72 6.05-6.06 6.05H34.28c-3.35 0-6.06-2.71-6.06-6.05s2.72-6.05 6.06-6.05" class="cls-1"/><path d="M198.33 94.89v21.68h-3.96v-1.76c-1 1.39-2.97 2.03-4.54 2.03-3.63 0-6.93-2.82-6.93-7.37s3.3-7.37 6.93-7.37c1.63 0 3.54.61 4.54 2.03v-9.25h3.96Zm-4.08 14.58c0-2.18-1.82-3.64-3.66-3.64-2 0-3.66 1.55-3.66 3.64s1.66 3.67 3.66 3.67 3.66-1.52 3.66-3.67m15.34-11.95c0-1.33 1.15-2.36 2.51-2.36s2.51 1.03 2.51 2.36-1.12 2.4-2.51 2.4-2.51-1.06-2.51-2.4m.55 4.91h3.97v14.13h-3.97zm30.36 0v14.13h-3.96v-1.76c-1 1.39-2.97 2.03-4.54 2.03-3.63 0-6.93-2.82-6.93-7.37s3.3-7.37 6.93-7.37c1.63 0 3.54.61 4.54 2.03v-1.7h3.96Zm-4.09 7.04c0-2.18-1.82-3.64-3.66-3.64-2 0-3.66 1.55-3.66 3.64s1.66 3.67 3.66 3.67 3.66-1.52 3.66-3.67m30.48-7.04v12.19c0 6.18-3.12 9.06-8.11 9.06-3.03 0-5.66-1.7-6.87-4.3l3.3-1.43c.61 1.27 2.06 2.18 3.57 2.18 2.54 0 4.15-1.39 4.15-5.09v-.21c-1.03 1.37-2.97 2-4.54 2-3.63 0-6.93-2.82-6.93-7.37s3.3-7.37 6.93-7.37c1.6 0 3.51.64 4.54 2v-1.67h3.97Zm-4.09 7.04c0-2.18-1.82-3.64-3.66-3.64-2 0-3.66 1.55-3.66 3.64s1.66 3.67 3.66 3.67 3.66-1.52 3.66-3.67m29.69-.67v7.76h-3.97v-7.34c0-2.24-1.33-3.24-2.69-3.24s-3.18.76-3.18 3.33v7.25h-3.96v-14.13h3.96v2.36c.61-1.91 2.84-2.73 4.24-2.73 3.69 0 5.63 2.49 5.6 6.73Zm10.75.67c0-4.49 3.57-7.4 7.6-7.4s7.6 2.91 7.6 7.4-3.57 7.37-7.6 7.37-7.6-2.91-7.6-7.37m11.16 0c0-2.21-1.6-3.7-3.57-3.7s-3.57 1.49-3.57 3.7 1.6 3.67 3.57 3.67 3.57-1.49 3.57-3.67m14.08 2.54h3.72c0 .82.7 1.7 2.09 1.7 1.15 0 2.03-.49 2.03-1.3 0-.61-.48-.91-1.54-1.18l-1.88-.46c-3.63-.97-4.12-3-4.12-4.49 0-2.18 2.27-4.21 5.54-4.21 2.57 0 5.6 1.27 5.57 4.61h-3.78c0-.94-.79-1.45-1.73-1.45s-1.63.46-1.63 1.18c0 .67.61 1 1.39 1.21l2.33.61c3.39.91 3.81 3.03 3.81 4.18 0 2.97-3.03 4.43-5.93 4.43s-5.84-1.7-5.87-4.82Zm30.99-6.51h-3v11.06h-3.96V105.5h-2.57v-3.06h2.57v-5.18h3.96v5.18h3zm9.84-7.98c0-1.33 1.15-2.36 2.51-2.36s2.51 1.03 2.51 2.36-1.12 2.4-2.51 2.4-2.51-1.06-2.51-2.4m.54 4.91h3.96v14.13h-3.96zm14.89 7.01c0-4.49 3.63-7.37 7.75-7.37 2.57 0 4.63 1.21 5.96 3.03l-2.97 2.09c-.64-.88-1.82-1.43-2.97-1.43-2.24 0-3.75 1.61-3.75 3.67s1.51 3.7 3.75 3.7c1.15 0 2.33-.55 2.97-1.43l2.97 2.09c-1.33 1.85-3.39 3.03-5.96 3.03-4.12 0-7.75-2.91-7.75-7.4Zm38.83-11.92c0-1.33 1.15-2.36 2.51-2.36s2.51 1.03 2.51 2.36-1.12 2.4-2.51 2.4-2.51-1.06-2.51-2.4m.55 4.91h3.96v14.13h-3.96zm29.57 6.37v7.76h-3.97v-7.34c0-2.24-1.33-3.24-2.69-3.24s-3.18.76-3.18 3.33v7.25h-3.96v-14.13h3.96v2.36c.61-1.91 2.84-2.73 4.24-2.73 3.69 0 5.63 2.49 5.6 6.73Zm16.8-7.27v.91h3.09v3.06h-3.09v11.06h-3.97V105.5h-2.66v-3.06h2.66v-.88c0-4.24 2.18-6.67 6.21-6.67h1.69v3.7h-.91c-2.27 0-3 1.24-3.03 2.94Zm12.32 7.94c0-4.49 3.57-7.4 7.6-7.4s7.6 2.91 7.6 7.4-3.57 7.37-7.6 7.37-7.6-2.91-7.6-7.37m11.17 0c0-2.21-1.6-3.7-3.57-3.7s-3.57 1.49-3.57 3.7 1.6 3.67 3.57 3.67 3.57-1.49 3.57-3.67m25.27-6.94-.91 3.79c-.85-.46-1.54-.51-2.03-.51-2.03 0-3.42 1.88-3.42 5.91v4.85h-3.96v-14.13h3.93v3c.79-2.36 2.39-3.36 4.15-3.36.76 0 1.61.12 2.24.45m32.57 6.27v7.76h-4v-7.46c0-2.21-1.15-3.12-2.54-3.12-1.57-.03-2.69.97-2.78 3.09v7.49h-3.97v-7.49c0-2.21-1.15-3.09-2.48-3.09-1.42 0-2.88.67-2.88 3.21v7.37h-3.96v-14.13h3.96v2.52c.42-1.94 2.42-2.88 4-2.88 2.09 0 3.72 1 4.54 2.73 1.09-2.06 3.27-2.73 4.72-2.73 3.54 0 5.39 2.49 5.39 6.73m26.18-6.37v14.13h-3.96v-1.76c-1 1.39-2.97 2.03-4.54 2.03-3.63 0-6.93-2.82-6.93-7.37s3.3-7.37 6.93-7.37c1.63 0 3.54.61 4.54 2.03v-1.7H578Zm-4.09 7.04c0-2.18-1.82-3.64-3.66-3.64-2 0-3.66 1.55-3.66 3.64s1.66 3.67 3.66 3.67 3.66-1.52 3.66-3.67m24.21-3.97h-3v11.06h-3.96V105.5h-2.57v-3.06h2.57v-5.18h3.96v5.18h3zm9.84-7.98c0-1.33 1.15-2.36 2.51-2.36s2.51 1.03 2.51 2.36-1.12 2.4-2.51 2.4-2.51-1.06-2.51-2.4m.54 4.91h3.96v14.13h-3.96zm14.89 7.01c0-4.49 3.63-7.37 7.75-7.37 2.57 0 4.63 1.21 5.96 3.03l-2.97 2.09c-.64-.88-1.82-1.43-2.97-1.43-2.24 0-3.75 1.61-3.75 3.67s1.51 3.7 3.75 3.7c1.15 0 2.33-.55 2.97-1.43l2.97 2.09c-1.33 1.85-3.39 3.03-5.96 3.03-4.12 0-7.75-2.91-7.75-7.4Zm23.49 2.57h3.72c0 .82.7 1.7 2.09 1.7 1.15 0 2.03-.49 2.03-1.3 0-.61-.48-.91-1.54-1.18l-1.88-.46c-3.63-.97-4.12-3-4.12-4.49 0-2.18 2.27-4.21 5.54-4.21 2.57 0 5.6 1.27 5.57 4.61h-3.78c0-.94-.79-1.45-1.73-1.45s-1.63.46-1.63 1.18c0 .67.61 1 1.39 1.21l2.33.61c3.39.91 3.81 3.03 3.81 4.18 0 2.97-3.03 4.43-5.93 4.43s-5.84-1.7-5.87-4.82Z" style="fill:#e54360"/><path d="M232.36 6.91c0-1.94.66-3.57 1.98-4.91 1.32-1.33 2.95-2 4.88-2s3.63.67 4.98 2 2.02 2.97 2.02 4.91-.67 3.59-2.02 4.95q-2.025 2.04-4.98 2.04c-2.955 0-3.53-.68-4.86-2.04s-2-3.01-2-4.95m18.78 0c0-1.94.66-3.57 1.98-4.91 1.32-1.33 2.95-2 4.88-2s3.63.67 4.98 2S265 4.97 265 6.91s-.67 3.59-2.02 4.95q-2.025 2.04-4.98 2.04c-2.955 0-3.53-.68-4.86-2.04s-2-3.01-2-4.95" style="fill:#ca1919"/><path d="m210.87 41.03-9.4-2.17c-1.8-.43-3.11-1.01-3.91-1.74-.71-.65-1.06-1.45-1.06-2.45 0-1.46.54-2.57 1.65-3.39 1.2-.88 2.93-1.33 5.14-1.33 3.44 0 6.43.98 8.88 2.9 2.46 1.93 4.21 4.69 5.18 8.18l.23.81h8.97V21.52h-7.65l-1.99 3.36c-2.07-1.4-4.21-2.48-6.39-3.22-2.53-.86-5.24-1.3-8.04-1.3-5.93 0-10.8 1.51-14.46 4.5-3.73 3.04-5.62 7.07-5.62 11.98 0 4.11 1.43 7.55 4.24 10.23 2.73 2.6 6.91 4.61 12.45 5.97l7.68 1.82c3.08.77 5.23 1.6 6.39 2.47 1.01.76 1.48 1.67 1.48 2.89 0 1.6-.63 2.84-1.93 3.79-1.39 1.02-3.29 1.53-5.67 1.53-4.03 0-7.41-1.11-10.05-3.29-2.64-2.19-4.45-5.42-5.37-9.61l-.19-.87h-9.58v22.19h8.71l1.63-3.79c2.46 1.62 4.88 2.83 7.21 3.6 2.7.89 5.67 1.35 8.85 1.35 6.4 0 11.52-1.51 15.21-4.5 3.76-3.04 5.67-7.24 5.67-12.49 0-4.41-1.51-8.06-4.5-10.83-2.89-2.68-7.52-4.79-13.75-6.29Zm49.94 22.36c-.26-.24-.85-1.15-.85-4.29V22.23h-24.62v9.19h4.95c2.71 0 3.66.5 3.98.8.25.23.83 1.11.83 4.27V59.1c0 3.18-.59 4.07-.84 4.3-.33.3-1.28.82-3.98.82h-4.95v9.14h33.72v-9.14h-4.24c-2.74 0-3.69-.52-4.02-.83Zm74.24-56.76c-4.94-3.31-12.28-4.99-21.84-4.99h-37.68v10.05h5.15c3.85 0 4.76.59 4.94.77s.78 1.04.78 4.55v40.93c0 3.51-.6 4.37-.78 4.55-.19.18-1.09.77-4.95.77h-5.15v10.1h39.49v-10.1h-5.96c-3.9 0-4.83-.61-5.02-.8-.19-.18-.81-1.06-.81-4.52v-16h8.51c6.06 0 10.87-.28 14.29-.82 3.51-.56 6.31-1.52 8.34-2.86 2.77-1.88 4.88-4.22 6.26-6.94 1.37-2.71 2.07-5.91 2.07-9.5 0-6.67-2.57-11.77-7.65-15.18Zm-9.78 15.19c0 3.69-1.1 6.21-3.38 7.7-2.38 1.57-6.7 2.37-12.82 2.37h-5.83v-20.2h5.02c6.86 0 11.49.78 13.78 2.32 2.17 1.46 3.23 4.02 3.23 7.81" style="fill:#163d6c"/><path d="M345.64 43.66c1.92 2.29 1.41 5.4-1.18 6.8-.81.44-1.78.67-2.66.59-3.25-.07-5.62-2.88-5.03-6.21.59-3.4 3.25-5.99 9.69-7.69 1.7-.52 3.47-.81 5.69-.96 12.79-.89 18.41 3.92 18.41 12.27v15.67l.07 2.14c0 1.4.3 2.07.96 2.66.89.74 2 .52 2.44-.44.22-.37.3-.74.59-1.78.15-.67.22-1.63.3-3.77l.07-2.14v-1.04h4.21c0 .52.07 1.04.07 1.55 0 1.55-.07 2.66-.15 3.62-.52 6.8-2.88 9.46-8.21 9.54-4.66.15-7.17-1.63-8.58-5.4-.15-.3-.22-.52-.3-.81-1.11 1.7-2.59 2.88-4.88 3.99-11.39 5.47-20.48 1.18-21.66-5.62-1.48-7.69 1.7-9.83 20.26-13.83l1.18-.22c.67-.15 1.41-.44 2.66-1.26 1.77-1.18 2.51-3.25 1.77-6.28-.52-2.37-2.59-4.07-7.25-4.81-.96-.15-2-.22-3.11-.15-3.47.15-5.54.74-7.47 2 .74.37 1.48.89 2.07 1.55Zm12.94 12.42c-6.58 1.77-7.84 2.14-8.87 2.51-4.36 1.63-5.62 3.7-4.73 7.1.67 2.44 3.11 4.14 6.8 3.99.96 0 1.92-.22 2.88-.59 4.73-1.7 6.73-4.81 6.8-10.35v-3.77c-2.07.89-2.51 1.03-2.88 1.11m22.18-19.07h16.49v5.62c.22-.37.52-.74.81-1.11 3.18-4.21 5.99-5.77 9.32-5.77.59 0 1.18 0 1.78.15 3.62.67 5.77 2.88 6.21 5.84.59 3.77-1.92 6.58-5.03 6.51-3.33-.07-5.47-3.03-4.51-6.14.3-.89.89-1.7 1.63-2.29-2.22-.37-4.29.44-6.65 2.96-2.44 2.59-3.55 5.77-3.55 10.94v11.16c0 3.11.67 3.7 4.44 3.7h4.07v4.88h-24.84v-4.88h3.7c2.96 0 3.7-.66 3.62-3.7l-.07-2.59V45.66c0-3.25-.44-3.7-3.77-3.7h-3.62v-4.95Zm45.25 6.65c1.92 2.29 1.41 5.4-1.18 6.8-.81.44-1.78.67-2.66.59-3.25-.07-5.62-2.88-5.03-6.21.59-3.4 3.25-5.99 9.69-7.69 1.7-.52 3.47-.81 5.69-.96 12.79-.89 18.41 3.92 18.41 12.27v15.67l.07 2.14c0 1.4.3 2.07.96 2.66.89.74 2 .52 2.44-.44.22-.37.3-.74.59-1.78.15-.67.22-1.63.3-3.77l.07-2.14v-1.04h4.21c0 .52.07 1.04.07 1.55 0 1.55-.07 2.66-.15 3.62-.52 6.8-2.88 9.46-8.21 9.54-4.66.15-7.17-1.63-8.58-5.4-.15-.3-.22-.52-.3-.81-1.11 1.7-2.59 2.88-4.88 3.99-11.39 5.47-20.48 1.18-21.66-5.62-1.48-7.69 1.7-9.83 20.26-13.83l1.18-.22c.67-.15 1.41-.44 2.66-1.26 1.77-1.18 2.51-3.25 1.77-6.28-.52-2.37-2.59-4.07-7.25-4.81-.96-.15-2-.22-3.11-.15-3.47.15-5.54.74-7.47 2 .74.37 1.48.89 2.07 1.55Zm12.93 12.42c-6.58 1.77-7.84 2.14-8.87 2.51-4.36 1.63-5.62 3.7-4.73 7.1.67 2.44 3.11 4.14 6.8 3.99.96 0 1.92-.22 2.88-.59 4.73-1.7 6.73-4.81 6.8-10.35v-3.77c-2.07.89-2.51 1.03-2.88 1.11m53.38-27.28c0-3.18-.59-3.7-4.51-3.7h-3.99v-4.88h17.6v44.66c.07 3.11.52 3.7 3.4 3.7h3.47v4.88h-15.9v-5.03c-.22.3-.44.52-.74.74-5.55 5.1-11.76 6.36-18.48 3.7-7.91-3.25-12.12-11.02-10.28-21.88.22-1.18.52-2.37.96-3.55 4.14-11.24 17.74-15.01 27.36-7.17.37.3.74.59 1.11.89V28.81Zm-7.61 40.22c5.1-1.26 8.21-5.77 8.06-14.49-.07-7.25-3.11-11.68-7.54-13.09-6.28-2.07-11.83 1.7-13.16 10.94l-.22 2.51c-.3 10.5 5.92 15.82 12.87 14.12Zm25.5-.44h3.99c2.81 0 3.47-.66 3.4-3.7l-.07-2.51V43.81c-.15-1.26-.96-1.85-2.88-1.85h-4.07v-4.95h16.04v27.87l.07 1.33v.52c.07 1.33.74 1.85 2.44 1.85h3.92v4.88H510.2v-4.88Zm10.94-49.46c1.63-.07 3.18.52 4.44 1.63 2.37 2.14 2.44 5.92.07 8.13-1.11 1.18-2.66 1.78-4.29 1.78-3.33 0-5.91-2.66-5.91-5.77-.07-2.96 2.44-5.62 5.69-5.77m18.26 54.71c-4.44-3.11-4.44-8.36.96-12.2.89-.59 1.7-1.11 2.59-1.48-.3-.22-.52-.44-.81-.67-3.62-3.4-4.95-7.54-3.92-12.35 1.63-7.32 9.24-12.57 21-11.09 3.33.37 6.58 1.48 9.69 3.18.44.22.89.52 1.33.74.07-.3.3-.52.44-.81 1.26-2.07 2.81-3.25 4.66-3.84 4.44-1.33 8.21 1.04 8.87 4.73.15.44.15.96.15 1.4-.07 3.33-2.81 5.32-5.4 4.51-2.88-.96-3.7-3.84-1.55-6.73.07-.22.22-.37.37-.52-1.04-.37-2.14-.15-3.03.74-1.33 1.33-1.55 2.44-1.33 3.99l.07.22.44 1.85c.15.66.3 1.33.37 2 1.03 10.35-6.29 17.37-20.63 16.12-1.85-.15-2.59-.3-6.8-1.33-1.26-.37-2.22 0-3.25 1.7-1.11 1.85-.07 3.92 4.07 4.58 1.33.22 3.11.37 9.83.22h2.44c7.17.07 10.57.74 13.16 1.92 6.06 2.81 7.91 9.98 3.92 14.93-3.33 4.14-10.13 6.8-23.44 6.21-2.51-.07-4.44-.22-6.21-.52-4.07-.67-5.55-1.03-7.32-1.85-5.69-2.74-6.58-8.21-2.59-11.98.52-.44 1.04-.81 1.55-1.18.96-.67 1.78-1.11 2.51-1.41-.66-.22-1.4-.59-2.14-1.11Zm10.5 13.16c2.44.52 6.14.81 9.83.52 1.92-.15 3.47-.37 4.66-.59 3.84-.89 5.25-1.55 6.28-2.74 1.7-1.77 1.26-4.81-.89-6.14-1.18-.66-2.37-.96-7.32-1.4-.22-.07-.44-.07-.74-.07h-2.07l-3.03-.07-8.87-.22h-.74l-.52.07-.52.07c-.96.15-1.77.67-2.74 2.07-.67.96-.96 2.07-.81 3.11.3 2.29 2.29 4.21 7.47 5.4Zm-3.25-34.75c.89 4.07 3.25 6.28 7.84 6.95 1.18.22 2.37.22 3.55.07 5.55-.89 8.65-5.1 7.76-11.46-.59-3.84-3.33-6.65-7.54-7.47-1.33-.3-2.74-.3-4.07 0-4.95.89-7.91 4.66-7.76 9.91 0 .66.07 1.33.22 2" class="cls-2"/><path d="M582.59 68.58h3.99c1.4 0 1.77-.07 2.22-.3 1.18-.59 1.55-1.4 1.55-3.4V45.44c0-3.11-.52-3.7-3.7-3.7h-3.92v-4.73h16.63v4.95c1.85-2.29 4.21-3.99 6.88-5.1.89-.37 1.85-.59 2.74-.81 7.1-1.55 13.16 1.48 15.45 6.58.44-.52.81-.96 1.26-1.41 3.92-4.07 7.91-5.84 12.27-5.84.96 0 1.92.15 2.88.3 6.8 1.33 9.76 4.88 10.42 12.12.07.81.07 1.55.07 2.29v15.6c.15 2.37.74 2.88 2.74 2.88h4.07v4.88h-21.81v-4.88h3.55c1.55 0 2.14-.44 2.29-1.85V50.31c0-1.4 0-2.37-.15-3.18-.67-4.88-5.84-7.54-11.09-4.88-.59.3-1.11.67-1.63 1.04-2.81 2.07-3.99 4.66-3.99 8.5v13.16l.07 1.77c0 1.41.59 1.85 2.07 1.85h3.62v4.88h-20.78v-4.88h3.62c1.48 0 2.07-.52 2.14-1.85l.07-1.11V50.53c0-1.63 0-2.51-.15-3.25-.81-5.03-6.21-7.54-10.94-4.88-1.11.67-2.14 1.48-3.03 2.51-1.85 2.22-2.51 4.29-2.51 7.84v13.97c.07 1.41.66 1.85 2.07 1.85h3.55v4.88h-22.55v-4.88Z" class="cls-2"/></g></svg>
+                <div class="footer-tagline">For Clinical &amp; Research Use</div>
+            </div>
+            <div class="footer-note">
+                All panels are designed for use by qualified healthcare professionals. Results should be interpreted in
+                the clinical context of each patient. Gene lists and biomarker assays subject to laboratory version
+                updates. Contact your genomics specialist for current panel content.
+            </div>
+            <div class="footer-version">
+                <div>Panel Catalog v4.2</div>
+                <div>NGS — Solid · Germline · Hemato</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal" id="modalContent">
+            <div class="modal-header">
+                <button class="modal-close" aria-label="Close">✕</button>
+                <div class="modal-cancer-label" id="modalCancerType"></div>
+                <div class="modal-panel-name" id="modalTitle"></div>
+                <div class="modal-pills" id="modalTags"></div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-section-title">Coverage Breadth</div>
+                <div class="coverage-track">
+                    <div class="coverage-fill" id="modalCoverageFill" style="width: 0%;"></div>
+                </div>
+                <div class="modal-section-title" style="margin-top: 24px;">Genes Analyzed</div>
+                <div class="modal-genes-grid" id="modalGenes"></div>
+                <div id="modalTestsSection">
+                    <div class="modal-section-title" style="margin-top: 32px;" id="modalIHCLabel">IHC Tests</div>
+                    <div class="modal-tests-row" id="modalIHCTests"></div>
+                    <div class="modal-section-title" style="margin-top: 24px;" id="modalFISHLabel">FISH Tests</div>
+                    <div class="modal-tests-row" id="modalFISHTests"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ═══════════════════════════════════════════════
+        // HEREDITARY DATA
+        // ═══════════════════════════════════════════════
+        const hereditaryPanels = [
+            {
+                id: 'brca',
+                type: 'Gold Standard Germline',
+                title: 'BRCA1 / BRCA2 Full Gene Analysis',
+                desc: 'Full gene sequencing and deletion/duplication analysis of BRCA1 and BRCA2. Suitable as a standalone reflex test or as part of multi-gene panel workflow for hereditary breast and ovarian cancer risk.',
+                genes: ['BRCA1', 'BRCA2'],
+                special: true
+            },
+            {
+                id: 'lynch',
+                type: 'Lynch Syndrome & Hereditary Colon Cancer',
+                title: '18-Gene Panel',
+                desc: 'Comprehensive analysis for Lynch syndrome and hereditary colorectal cancer predisposition including MMR genes and additional high-risk genes.',
+                genes: ['APC', 'AXIN2', 'BMPR1A', 'CDH1', 'CHEK2', 'EPCAM', 'MLH1', 'MSH2', 'MSH3', 'MSH6', 'MUTYH', 'PMS2', 'POLD1', 'POLE', 'PTEN', 'SMAD4', 'STK11', 'TP53']
+            },
+            {
+                id: 'breast',
+                type: 'Breast & Ovarian Cancer',
+                title: '18-Gene Panel',
+                desc: 'Multi-gene analysis covering high- and moderate-penetrance genes for hereditary breast and ovarian cancer syndrome.',
+                genes: ['ATM', 'BARD1', 'BRCA1', 'BRCA2', 'BRIP1', 'CDH1', 'CHEK2', 'MRE11A', 'MUTYH', 'NBN', 'NF1', 'PALB2', 'PTEN', 'RAD50', 'RAD51C', 'RAD51D', 'STK11', 'TP53']
+            },
+            {
+                id: 'pancreatic',
+                type: 'Pancreatic Cancer',
+                title: '19-Gene Panel',
+                desc: 'Targeted germline panel for patients with personal or family history of pancreatic adenocarcinoma.',
+                genes: ['APC', 'ATM', 'BRCA1', 'BRCA2', 'BMPR1A', 'CDK4', 'CDKN2A', 'EPCAM', 'MEN1', 'MLH1', 'MSH2', 'MSH6', 'NF1', 'PALB2', 'PMS2', 'SMAD4', 'STK11', 'TP53', 'VHL']
+            },
+            {
+                id: 'prostate',
+                type: 'Prostate Cancer',
+                title: '15-Gene Panel',
+                desc: 'Germline analysis panel for hereditary prostate cancer risk, including genes with implications for PARP inhibitor eligibility.',
+                genes: ['ATM', 'BRCA1', 'BRCA2', 'BRIP1', 'CHEK2', 'EPCAM', 'MLH1', 'MSH2', 'MSH6', 'NBN', 'PALB2', 'PMS2', 'RAD51C', 'RAD51D', 'TP53']
+            },
+            {
+                id: 'comprehensive',
+                type: 'Comprehensive Hereditary',
+                title: '45-Gene Panel',
+                desc: 'Broad multi-gene panel spanning all major hereditary cancer syndromes. Individual genes available upon request.',
+                genes: ['APC', 'ATM', 'AXIN2', 'BAP1', 'BARD1', 'BLM', 'BMPR1A', 'BRIP1', 'BRCA1', 'BRCA2', 'CDH1', 'CDK4', 'CDKN2A', 'CHEK2', 'EPCAM', 'ERCC2', 'KIT', 'MEN1', 'MITF', 'MLH1', 'MRE11A', 'MSH2', 'MSH3', 'MSH6', 'MUTYH', 'NBN', 'NF1', 'PALB2', 'PDGFRA', 'PMS2', 'POLD1', 'POLE', 'PTEN', 'RAD50', 'RAD51C', 'RAD51D', 'RET', 'SDHA', 'SDHB', 'SDHC', 'SDHD', 'SMAD4', 'STK11', 'TP53', 'VHL'],
+                comprehensive: true
+            }
+        ];
+
+        // ═══════════════════════════════════════════════
+        // HEMATOLOGY DATA — WITH STARRED GENES
+        // ═══════════════════════════════════════════════
+        const hematologyPanels = [
+            {
+                id: 'myeloid-focused',
+                num: '01',
+                type: 'DNA Panel',
+                title: 'Myeloid Focused',
+                genes: [
+                    { name: 'ABL1', starred: false },
+                    { name: 'ASXL1', starred: true },
+                    { name: 'BCOR', starred: true },
+                    { name: 'BCORL1', starred: false },
+                    { name: 'BRAF', starred: false },
+                    { name: 'CALR', starred: true },
+                    { name: 'CBL', starred: false },
+                    { name: 'CEBPA', starred: true },
+                    { name: 'CSF3R', starred: false },
+                    { name: 'CXCR4', starred: false },
+                    { name: 'DDX41', starred: false },
+                    { name: 'DNMT3A', starred: false },
+                    { name: 'ETV6', starred: true },
+                    { name: 'EZH2', starred: true },
+                    { name: 'FLT3', starred: false },
+                    { name: 'GATA1', starred: false },
+                    { name: 'GATA2', starred: false },
+                    { name: 'HRAS', starred: false },
+                    { name: 'IDH1', starred: false },
+                    { name: 'IDH2', starred: false },
+                    { name: 'IKZF1', starred: true },
+                    { name: 'JAK2', starred: false },
+                    { name: 'KIT', starred: false },
+                    { name: 'KRAS', starred: false },
+                    { name: 'MPL', starred: false },
+                    { name: 'MYD88', starred: false },
+                    { name: 'NF1', starred: true },
+                    { name: 'NOTCH1', starred: false },
+                    { name: 'NPM1', starred: false },
+                    { name: 'NRAS', starred: false },
+                    { name: 'PHF6', starred: true },
+                    { name: 'PIGA', starred: false },
+                    { name: 'PPM1D', starred: false },
+                    { name: 'PRPF8', starred: true },
+                    { name: 'PTPN11', starred: false },
+                    { name: 'RB1', starred: true },
+                    { name: 'RUNX1', starred: true },
+                    { name: 'SETBP1', starred: false },
+                    { name: 'SF3B1', starred: false },
+                    { name: 'SH2B3', starred: true },
+                    { name: 'SRSF2', starred: false },
+                    { name: 'STAG2', starred: true },
+                    { name: 'STAT3', starred: false },
+                    { name: 'STAT5B', starred: false },
+                    { name: 'TET2', starred: true },
+                    { name: 'TP53', starred: true },
+                    { name: 'U2AF1', starred: false },
+                    { name: 'WT1', starred: false },
+                    { name: 'ZRSR2', starred: true }
+                ]
+            },
+            {
+                id: 'myeloid-comprehensive',
+                num: '02',
+                type: 'DNA Panel',
+                title: 'Myeloid Comprehensive',
+                genes: [
+                    { name: 'ABL1', starred: false },
+                    { name: 'ANKRD26', starred: false },
+                    { name: 'ASXL1', starred: true },
+                    { name: 'BCOR', starred: true },
+                    { name: 'BCORL1', starred: false },
+                    { name: 'BRAF', starred: false },
+                    { name: 'CALR', starred: true },
+                    { name: 'CBL', starred: false },
+                    { name: 'CBLB', starred: false },
+                    { name: 'CBLC', starred: false },
+                    { name: 'CDKN2A', starred: false },
+                    { name: 'CEBPA', starred: true },
+                    { name: 'CSF3R', starred: false },
+                    { name: 'CUX1', starred: false },
+                    { name: 'CXCR4', starred: false },
+                    { name: 'DDX41', starred: false },
+                    { name: 'DNMT3A', starred: false },
+                    { name: 'ETNK1', starred: false },
+                    { name: 'ETV6', starred: true },
+                    { name: 'EZH2', starred: true },
+                    { name: 'FBXW7', starred: false },
+                    { name: 'FLT3', starred: false },
+                    { name: 'GATA1', starred: false },
+                    { name: 'GATA2', starred: false },
+                    { name: 'GNAS', starred: false },
+                    { name: 'GNB1', starred: false },
+                    { name: 'HRAS', starred: false },
+                    { name: 'IDH1', starred: false },
+                    { name: 'IDH2', starred: false },
+                    { name: 'IKZF1', starred: true },
+                    { name: 'IL7R', starred: false },
+                    { name: 'JAK1', starred: false },
+                    { name: 'JAK2', starred: false },
+                    { name: 'JAK3', starred: false },
+                    { name: 'KIT', starred: false },
+                    { name: 'KRAS', starred: false },
+                    { name: 'MPL', starred: false },
+                    { name: 'MYD88', starred: false },
+                    { name: 'NF1', starred: true },
+                    { name: 'NOTCH1', starred: false },
+                    { name: 'NPM1', starred: false },
+                    { name: 'NRAS', starred: false },
+                    { name: 'PAX5', starred: false },
+                    { name: 'PHF6', starred: true },
+                    { name: 'PIGA', starred: false },
+                    { name: 'PPM1D', starred: false },
+                    { name: 'PRPF8', starred: true },
+                    { name: 'PTEN', starred: false },
+                    { name: 'PTPN11', starred: false },
+                    { name: 'RB1', starred: true },
+                    { name: 'RUNX1', starred: true },
+                    { name: 'SETBP1', starred: false },
+                    { name: 'SF3A1', starred: false },
+                    { name: 'SF3B1', starred: false },
+                    { name: 'SH2B3', starred: true },
+                    { name: 'SMARCB1', starred: false },
+                    { name: 'SMC1A', starred: false },
+                    { name: 'SMC3', starred: false },
+                    { name: 'SRSF2', starred: false },
+                    { name: 'STAG2', starred: true },
+                    { name: 'STAT3', starred: false },
+                    { name: 'STAT5B', starred: false },
+                    { name: 'TET2', starred: true },
+                    { name: 'TP53', starred: true },
+                    { name: 'U2AF1', starred: false },
+                    { name: 'U2AF2', starred: false },
+                    { name: 'UBA1', starred: false },
+                    { name: 'WT1', starred: false },
+                    { name: 'XPO1', starred: false },
+                    { name: 'ZRSR2', starred: true }
+                ]
+            },
+            {
+                id: 'aml-eosinophilia',
+                num: '03',
+                type: 'DNA / RNA Panel',
+                title: 'AML / Eosinophilia',
+                genes: [
+                    { name: 'ABL1', starred: true },
+                    { name: 'ALK', starred: true },
+                    { name: 'ANKRD26', starred: false },
+                    { name: 'ASXL1', starred: false },
+                    { name: 'BCL2', starred: true },
+                    { name: 'BCOR', starred: false },
+                    { name: 'BRAF', starred: true },
+                    { name: 'CALR', starred: false },
+                    { name: 'CBL', starred: false },
+                    { name: 'CCND1', starred: true },
+                    { name: 'CEBPA', starred: false },
+                    { name: 'CREBBP', starred: true },
+                    { name: 'CSF3R', starred: false },
+                    { name: 'DDX41', starred: false },
+                    { name: 'DNMT3A', starred: false },
+                    { name: 'EGFR', starred: true },
+                    { name: 'ETV6', starred: true },
+                    { name: 'EZH2', starred: false },
+                    { name: 'FGFR1', starred: true },
+                    { name: 'FGFR2', starred: true },
+                    { name: 'FLT3', starred: false },
+                    { name: 'FUS', starred: true },
+                    { name: 'GATA2', starred: false },
+                    { name: 'HMGA2', starred: true },
+                    { name: 'HRAS', starred: false },
+                    { name: 'IDH1', starred: false },
+                    { name: 'IDH2', starred: false },
+                    { name: 'IKZF1', starred: false },
+                    { name: 'JAK2', starred: true },
+                    { name: 'KIT', starred: false },
+                    { name: 'KMT2A', starred: true },
+                    { name: 'KRAS', starred: false },
+                    { name: 'MET', starred: true },
+                    { name: 'MECOM', starred: true },
+                    { name: 'MLLT10', starred: true },
+                    { name: 'MLLT3', starred: true },
+                    { name: 'MPL', starred: false },
+                    { name: 'MYBL1', starred: true },
+                    { name: 'MYD88', starred: false },
+                    { name: 'MYH11', starred: true },
+                    { name: 'NF1', starred: false },
+                    { name: 'NPM1', starred: false },
+                    { name: 'NRAS', starred: false },
+                    { name: 'NTRK3', starred: true },
+                    { name: 'NUP214', starred: true },
+                    { name: 'NUP98', starred: true },
+                    { name: 'PDGFRA', starred: true },
+                    { name: 'PDGFRB', starred: true },
+                    { name: 'PHF6', starred: false },
+                    { name: 'PPM1D', starred: false },
+                    { name: 'PRPF8', starred: false },
+                    { name: 'PTPN11', starred: false },
+                    { name: 'RARA', starred: true },
+                    { name: 'RB1', starred: false },
+                    { name: 'RBM15', starred: true },
+                    { name: 'RUNX1', starred: false },
+                    { name: 'SETBP1', starred: false },
+                    { name: 'SF3B1', starred: false },
+                    { name: 'SH2B3', starred: false },
+                    { name: 'SMC1A', starred: false },
+                    { name: 'SMC3', starred: false },
+                    { name: 'SRSF2', starred: false },
+                    { name: 'STAG2', starred: false },
+                    { name: 'TCF3', starred: true },
+                    { name: 'TET2', starred: false },
+                    { name: 'TFE3', starred: true },
+                    { name: 'TP53', starred: false },
+                    { name: 'U2AF1', starred: false },
+                    { name: 'WT1', starred: false },
+                    { name: 'ZRSR2', starred: false }
+                ]
+            },
+            {
+                id: 'lymphoid',
+                num: '04',
+                type: 'DNA Panel',
+                title: 'Lymphoid',
+                genes: [
+                    { name: 'ATM', starred: true },
+                    { name: 'B2M', starred: false },
+                    { name: 'BCL2', starred: false },
+                    { name: 'BCL6', starred: true },
+                    { name: 'BIRC3', starred: false },
+                    { name: 'BRAF', starred: false },
+                    { name: 'BTK', starred: false },
+                    { name: 'CARD11', starred: false },
+                    { name: 'CCND1', starred: false },
+                    { name: 'CCND3', starred: true },
+                    { name: 'CD79B', starred: false },
+                    { name: 'CREBBP', starred: false },
+                    { name: 'CXCR4', starred: false },
+                    { name: 'DNMT3A', starred: false },
+                    { name: 'EP300', starred: false },
+                    { name: 'EZH2', starred: true },
+                    { name: 'ETV6', starred: false },
+                    { name: 'FAS', starred: false },
+                    { name: 'FBXW7', starred: false },
+                    { name: 'FOXO1', starred: false },
+                    { name: 'GNA13', starred: false },
+                    { name: 'ID3', starred: false },
+                    { name: 'IDH2', starred: true },
+                    { name: 'IRF4', starred: true },
+                    { name: 'KMT2D', starred: true },
+                    { name: 'MAP2K1', starred: false },
+                    { name: 'MYC', starred: false },
+                    { name: 'MYD88', starred: false },
+                    { name: 'NFKBIE', starred: false },
+                    { name: 'NOTCH1', starred: false },
+                    { name: 'NOTCH2', starred: false },
+                    { name: 'PAX5', starred: true },
+                    { name: 'PIM1', starred: true },
+                    { name: 'PLCG2', starred: true },
+                    { name: 'PRDM1', starred: false },
+                    { name: 'PTEN', starred: true },
+                    { name: 'RHOA', starred: true },
+                    { name: 'RPS15', starred: false },
+                    { name: 'SAMHD1', starred: true },
+                    { name: 'SF3B1', starred: true },
+                    { name: 'SOCS1', starred: true },
+                    { name: 'STAT3', starred: false },
+                    { name: 'STAT5B', starred: false },
+                    { name: 'STAT6', starred: false },
+                    { name: 'TENT5C', starred: true },
+                    { name: 'TET2', starred: true },
+                    { name: 'TNFAIP3', starred: false },
+                    { name: 'TNFRSF14', starred: false },
+                    { name: 'TP53', starred: true },
+                    { name: 'XPO1', starred: false }
+                ]
+            }
+        ];
+
+        // ═══════════════════════════════════════════════
+        // SOLID TUMOR DATA
+        // ═══════════════════════════════════════════════
+        const panels = [
+            { cancer: "Bladder Cancers", name: "Bladder Multi-Omics", genes: 37, biomarkers: ["MSI", "TMB"], geneList: ["ALK", "AKT1", "AR", "ATM", "BAP1", "BRAF", "BRCA1", "BRCA2", "CDKN2A", "CCND1", "CREBBP", "EGFR", "ERBB2", "ERBB3", "ERBB4", "FANCA", "FBXW7", "FGFR1", "FGFR2", "FGFR3", "HRAS", "KDM6A", "KMT2A", "KMT2C", "KMT2D", "KRAS", "MAP2K1", "NF1", "NRAS", "PIK3CA", "PTEN", "RB1", "RET", "SMARCA4", "STAG2", "TERT", "TP53"], ihc: ["MMR", "PD-L1"], fish: [] },
+            { cancer: "Brain / CNS Cancers", name: "Brain Multi-Omics", genes: 34, biomarkers: ["MSI", "TMB"], geneList: ["APC", "ATRX", "BRAF", "CDK4", "CTNNB1", "CDKN2A", "CDKN2B", "EGFR", "ERBB2", "ERBB4", "FGFR1", "FGFR2", "FGFR3", "H3F3A", "HRAS", "IDH1", "IDH2", "NRG1", "KIT", "KRAS", "MET", "MTOR", "MYCN", "MYD88", "NRAS", "NTRK1", "NTRK2", "NTRK3", "PDGFRA", "TP53", "TSC1", "TSC2"], ihc: ["MMR", "PD-L1(22C3)"], fish: ["1p36 / 19q13", "PTEN / CEN10"] },
+            { cancer: "Breast Cancers", name: "Breast Multi-Omics", genes: 43, biomarkers: ["TMB", "MSI", "HRD for PARPi efficacy"], geneList: ["AR", "AKT1", "ATM", "BRAF", "BRCA1", "BRCA2", "CCNE1", "CDH1", "CDK12", "CHEK1", "CHEK2", "EGFR", "ERBB2", "ERBB3", "ERBB4", "ESR1", "FANCA", "FANCL", "FGFR1", "FGFR2", "FGFR3", "KRAS", "MLH1", "MRE11A", "MSH2", "MSH6", "MUTYH", "MYC", "NBN", "NTRK1", "NTRK2", "NTRK3", "PALB2", "PIK3CA", "PMS2", "PTEN", "RAD50", "RAD51", "RB1", "RET", "STK11", "TERT", "TP53"], ihc: ["ER", "HER-2/neu", "Ki-67, MMR", "PD-L1 (22C3)", "PR"], fish: ["HER-2/neu"] },
+            { cancer: "Colorectal Cancers", name: "Colorectal Multi-Omics", genes: 38, biomarkers: ["MSI", "TMB"], geneList: ["AKT1", "APC", "ATM", "AXIN2", "BRAF", "CHEK1", "CHEK2", "ERBB2", "ERBB3", "ERBB4", "EGFR", "FANCA", "FBXW7", "HRAS", "KRAS", "MAP2K1", "MET", "MLH1", "MSH2", "MSH6", "MUTYH", "NTRK1", "NTRK2", "NTRK3", "NRAS", "PIK3CA", "PMS2", "POLD1", "POLE", "PTEN", "RET", "SMAD4", "STK11", "TERT", "TP53"], ihc: ["BRAF", "MMR", "PD-L1 (22C3)"], fish: ["HER-2/neu"] },
+            { cancer: "Endometrial Cancers", name: "Endometrial Multi-Omics", genes: 39, biomarkers: ["MSI", "TMB"], geneList: ["AKT1", "APC", "ARID1A", "ARID2", "ATM", "BRAF", "BRCA1", "BRCA2", "CDK12", "CDK4", "CHEK2", "CTNNB1", "EPCAM", "ERBB2", "ESR1", "FBXW7", "KRAS", "MDM2", "MLH1", "MSH2", "MSH6", "NBN", "NRAS", "NTRK1", "NTRK2", "NTRK3", "PALB2", "PIK3CA", "PMS2", "POLE", "POLD1", "PPP2R1A", "PTEN", "RET", "RNF43", "SAMD4", "STK11", "TP53"], ihc: ["BRAF", "MMR", "PD-L1 (22C3)"], fish: ["HER-2/neu"] },
+            { cancer: "Esophageal Cancers", name: "Esophagus Multi-Omics", genes: 34, biomarkers: ["MSI", "TMB"], geneList: ["AKT1", "AR", "ARAF", "ARID1A", "BRAF", "CDK12", "CDK6", "CCNE1", "CCND1", "CDKN2A", "EGFR", "ERBB2", "ERBB3", "FGFR1", "FGFR2", "FGFR3", "KIT", "KRAS", "MCL1", "MAP2K1", "MET", "MLH1", "MSH2", "MSH6", "MTOR", "NTRK1", "NTRK2", "NTRK3", "NRG1", "NRAS", "PMS2", "PIK3CA", "RET", "TP53"], ihc: ["HER-2/neu", "MMR", "PD-L1 (22C3)"], fish: ["HER-2/neu"] },
+            { cancer: "Gastric / GIST Cancers", name: "Gastric/GIST Multi-Omics", genes: 40, biomarkers: ["MSI", "TMB"], geneList: ["AR", "APC", "ATM", "BRAF", "CD274", "CDH1", "CCNE1", "CTNNB1", "ERBB2", "ERBB4", "EGFR", "FBXW7", "FGFR1", "FGFR2", "FGFR3", "KRAS", "MET", "MDM2", "MEN1", "MLH1", "MSH2", "MSH6", "NF1", "NRG1", "NRAS", "NTRK1", "NTRK2", "NTRK3", "PDGFRA", "PIK3CA", "PMS2", "PTEN", "RET", "RB1", "SAMD4", "SDHA", "SDHB", "SDHC", "SDHD", "TP53"], ihc: ["HER-2/neu", "MMR", "PD-L1 (22C3)"], fish: ["HER-2/neu"] },
+            { cancer: "Head and Neck Cancers", name: "Head and Neck Multi-Omics", genes: 34, biomarkers: ["MSI", "TMB"], geneList: ["AR", "ATM", "ARAF", "BRAF", "CD274", "CDKN2A", "EGFR", "ERBB2", "ERBB3", "FGFR1", "FGFR2", "FGFR3", "HRAS", "IDH1", "IDH2", "KRAS", "MET", "MTOR", "MLH1", "MSH2", "MSH6", "NOTCH1", "NRAS", "NRG1", "NTRK1", "NTRK2", "NTRK3", "PIK3CA", "PMS2", "PTEN", "RSPO2", "RET", "TERT", "TP53"], ihc: ["MMR", "PD-L1 (22C3)"], fish: [] },
+            { cancer: "Hepatocellular and Biliary Tract Cancers", name: "Liver Multi-Omics", genes: 43, biomarkers: ["MSI", "TMB"], geneList: ["AKT1", "ARAF", "ARID1A", "ATM", "BRAF", "BAP1", "BRCA1", "BRCA2", "CTNNB1", "EGFR", "ERBB2", "ERBB3", "ERBB4", "ESR1", "FGFR1", "FGFR2", "FGFR3", "FGFR4", "GNA11", "IDH1", "IDH2", "KIT", "KRAS", "MAP2K1", "MAP2K2", "MET", "MLH1", "MSH2", "MSH6", "MTOR", "NRAS", "NRG1", "NTRK1", "NTRK2", "NTRK3", "PALB2", "PIK3CA", "PMS2", "PTEN", "RET", "RAD51D", "TERT", "TP53"], ihc: ["MMR", "PD-L1 (22C3)"], fish: [] },
+            { cancer: "Lung Cancers", name: "Lung Multi-Omics", genes: 38, biomarkers: ["MSI", "TMB"], geneList: ["AKT1", "ALK", "ARAF", "ATM", "BRAF", "ARID2", "CCND1", "CD274", "CDK4", "CDKN2A", "CHEK2", "ERBB2", "ERBB3", "EGFR", "FGFR1", "FGFR2", "FGFR3", "HRAS", "KEAP1", "KRAS", "MAP2K1", "MET", "MYCL", "MTOR", "NFE2L2", "NRG1", "NRAS", "NTRK1", "NTRK2", "NTRK3", "NUTM1", "PIK3CA", "RET", "RICTOR", "ROS1", "RB1", "STK11", "TP53"], ihc: ["ALK", "BRAF", "MMR", "PD-L1 (22C3)", "ROS1"], fish: ["ALK", "MET/CEN7", "RET", "ROS1"] },
+            { cancer: "Melanoma", name: "Melanoma Multi-Omics", genes: 37, biomarkers: ["MSI", "TMB"], geneList: ["APC", "ARID2", "ATM", "BRAF", "BAP1", "BRCA2", "CCND1", "CDK4", "CDKN2A", "CHEK2", "CTNNB1", "EIF1AX", "FBXW7", "GNA11", "GNAQ", "GNAS", "IDH1", "KIT", "MAP2K1", "MAP2K2", "NF1", "NRAS", "NTRK1", "NTRK2", "NTRK3", "PALB2", "PDGFRA", "PIK3CA", "PTEN", "RB1", "RET", "ROS1", "SF3B1", "SMO", "SRC", "TERT", "TP53"], ihc: ["BRAF", "MMR", "PD-L1 (22C3)"], fish: [] },
+            { cancer: "Ovarian Cancers", name: "Ovarian Multi-Omics", genes: 43, biomarkers: ["TMB", "MSI", "HRD for PARPi efficacy"], geneList: ["AKT1", "ARAF", "ATM", "ARID1A", "BARD1", "BRAF", "BRCA1", "BRCA2", "BRIP1", "CCNE1", "CDK12", "CHEK1", "CHEK2", "CTNNB1", "ERBB2", "ESR1", "FANCA", "FANCL", "FGFR1", "FGFR2", "FGFR3", "FOLR1", "KIT", "MAP2K1", "MET", "MLH1", "MSH2", "MSH6", "MTOR", "NTRK1", "NTRK2", "NTRK3", "NF1", "NRG1", "PALB2", "PIK3CA", "PMS2", "PPP2R1A", "PTEN", "RAD51C", "RAD51D", "RAD54L", "RET", "TP53"], ihc: ["FOLR1", "MMR", "PD-L1 (22C3)"], fish: ["HER-2/neu"] },
+            { cancer: "Pancreatic Cancers", name: "Pancreas Multi-Omics", genes: 29, biomarkers: ["TMB", "MSI", "HRD for PARPi efficacy"], geneList: ["ALK", "ATM", "BRAF", "BRCA1", "BRCA2", "CDKN2A", "ERBB2", "FGFR1", "FGFR2", "FGFR3", "FANCL", "IDH1", "IDH2", "KRAS", "MLH1", "MSH2", "MSH6", "NRG1", "NTRK1", "NTRK2", "NTRK3", "PALB2", "PMS2", "PIK3CA", "RET", "ROS1", "SMAD4", "STK11", "TP53"], ihc: ["MMR", "PD-L1 (22C3)"], fish: [] },
+            { cancer: "Prostate Cancers", name: "Prostate Multi-Omics", genes: 42, biomarkers: ["TMB", "MSI", "HRD for PARPi efficacy"], geneList: ["AKT1", "AR", "ARID1A", "ATM", "ATR", "BARD1", "BRAF", "BRCA1", "BRCA2", "BRIP1", "CCND1", "CDK12", "CHEK1", "CHEK2", "CTNNB1", "FANCA", "FANCD2", "FANCL", "HRAS", "IDH1", "MLH1", "MRE11A", "MSH2", "MSH6", "MUTYH", "NBN", "NTRK1", "NTRK2", "NTRK3", "PALB2", "PIK3CA", "PMS2", "PPP2R2A", "PTEN", "RAD51B", "RAD51C", "RAD51D", "RB1", "RET", "SPOP", "TERT", "TP53"], ihc: ["MMR", " PD-L1 (22C3)"], fish: ["PTEN/CEN10"] },
+            { cancer: "Thyroid Cancers", name: "Thyroid Multi-Omics", genes: 28, biomarkers: ["MSI", "TMB"], geneList: ["ALK", "AKT1", "BRAF", "BRCA1", "BRCA2", "CDKN2A", "CTNNB1", "FGFR1", "FGFR2", "FGFR3", "HRAS", "IDH1", "IDH2", "KRAS", "MET", "NTRK1", "NTRK2", "NTRK3", "NRAS", "RET", "MLH1", "MSH2", "MSH6", "PMS2", "PALB2", "PIK3CA", "PTEN", "TERT"], ihc: ["BRAF", "MMR", "PD-L1 (22C3)"], fish: [] },
+            { cancer: "Tumor of Unknown Origin", name: "Unknown Origin Multi-Omics", genes: 48, biomarkers: ["MSI", "TMB"], geneList: ["AKT1", "ALK", "AR", "ARAF", "BRAF", "CD274", "CDK4", "CDKN2A", "CHEK2", "CTNNB1", "EGFR", "ERBB2", "ERBB3", "ERBB4", "ERG", "ESR1", "ETV1", "FGFR1", "FGFR2", "FGFR3", "FGFR4", "FLT3", "GNA11", "GNAQ", "GNAS", "HRAS", "IDH1", "IDH2", "KIT", "KRAS", "MAP2K1", "MAP2K2", "MET", "MTOR", "NRAS", "NRG1", "NTRK1", "NTRK2", "NTRK3", "NUTM1", "PDGFRA", "PIK3CA", "PTEN", "RAF1", "RET", "ROS1", "SMO", "TP53"], ihc: ["MMR", " PD-L1 (22C3)"], fish: [] }
+        ];
+
+        const actionableGenes = new Set(['ALK', 'BRAF', 'BRCA1', 'BRCA2', 'EGFR', 'ERBB2', 'ESR1', 'FGFR1', 'FGFR2', 'FGFR3', 'FGFR4', 'IDH1', 'IDH2', 'KIT', 'KRAS', 'MET', 'NTRK1', 'NTRK2', 'NTRK3', 'NRG1', 'NRAS', 'PALB2', 'PDGFRA', 'PIK3CA', 'RET', 'ROS1', 'AR', 'TP53', 'MSH2', 'MLH1', 'MSH6', 'PMS2', 'PTEN', 'HRAS', 'MTOR']);
+
+        // ═══════════════════════════════════════════════
+        // RENDER HEREDITARY PANELS
+        // ═══════════════════════════════════════════════
+        function renderHereditary() {
+            const grid = document.getElementById('hereditaryGrid');
+            grid.innerHTML = '';
+
+            hereditaryPanels.forEach((p, i) => {
+                const card = document.createElement('div');
+                card.className = 'hered-card reveal';
+                if (p.special) card.classList.add('hered-brca');
+
+                if (p.special) {
+                    card.innerHTML = `
+        <div class="brca-badge">BRCA</div>
+        <div>
+          <div class="hered-icon">${p.type}</div>
+          <div class="hered-title">${p.title}</div>
+          <div class="hered-desc">${p.desc}</div>
+          <div class="hered-genes-label">Genes Analyzed</div>
+          <div class="hered-genes-list">
+            ${p.genes.map(g => `<span class="hered-gene">${g}</span>`).join('')}
+          </div>
+          <span class="meta-tag" style="display: inline-block; margin-top: 12px; border-radius: 24px;">Full Sequencing · Del/Dup Analysis</span>
+        </div>
+      `;
+                } else {
+                    card.innerHTML = `
+        <div class="hered-icon">${p.type}</div>
+        <div class="hered-title">${p.title}</div>
+        <div class="hered-desc">${p.desc}</div>
+        <div class="hered-genes-label">Genes Included</div>
+        <div class="hered-genes-list">
+          ${p.genes.map(g => `<span class="hered-gene">${g}</span>`).join('')}
+        </div>
+        <div class="hered-gene-count-row">
+          <div class="hered-gene-count counter" data-target="${p.genes.length}">0</div>
+          <div class="hered-gene-label">Genes Analyzed</div>
+        </div>
+      `;
+                }
+
+                grid.appendChild(card);
+            });
+
+            requestAnimationFrame(() => {
+                document.querySelectorAll('.hered-card.reveal').forEach(el => {
+                    if (!el.classList.contains('visible')) observer.observe(el);
+                });
+            });
+        }
+
+        // ═══════════════════════════════════════════════
+        // RENDER HEMATOLOGY PANELS — WITH SEE MORE
+        // ═══════════════════════════════════════════════
+        const PREVIEW_COUNT = 12;
+
+        function renderHematology() {
+            const container = document.getElementById('hemPanels');
+            container.innerHTML = '';
+
+            hematologyPanels.forEach((p, i) => {
+                const card = document.createElement('div');
+                card.className = 'hem-card reveal';
+                card.dataset.num = p.num;
+
+                const totalGenes = p.genes.length;
+                const hasMore = totalGenes > PREVIEW_COUNT;
+                const starredCount = p.genes.filter(g => g.starred).length;
+
+                card.innerHTML = `
+      <div class="hem-type">${p.type}</div>
+      <div class="hem-title">${p.title}</div>
+      <div class="hem-genes" id="genes-${p.id}">
+        ${p.genes.map((g, idx) =>
+                    `<span class="hem-gene${g.starred ? ' starred' : ''}${idx >= PREVIEW_COUNT ? ' hidden-gene' : ''}">${g.name}</span>`
+                ).join('')}
+      </div>
+      ${hasMore ? `
+        <button class="hem-see-more" onclick="toggleGenes('${p.id}', this)">
+          <span class="see-more-text">See all ${totalGenes} genes</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </button>
+      ` : ''}
+    `;
+
+                container.appendChild(card);
+            });
+
+            requestAnimationFrame(() => {
+                document.querySelectorAll('.hem-card.reveal').forEach(el => {
+                    if (!el.classList.contains('visible')) observer.observe(el);
+                });
+            });
+        }
+
+        function toggleGenes(panelId, btn) {
+            const genesContainer = document.getElementById(`genes-${panelId}`);
+            const isExpanded = genesContainer.classList.contains('expanded');
+            const totalGenes = genesContainer.querySelectorAll('.hem-gene').length;
+
+            if (isExpanded) {
+                genesContainer.classList.remove('expanded');
+                btn.classList.remove('active');
+                btn.querySelector('.see-more-text').textContent = `See all ${totalGenes} genes`;
+            } else {
+                genesContainer.classList.add('expanded');
+                btn.classList.add('active');
+                btn.querySelector('.see-more-text').textContent = 'Show less';
+            }
+        }
+
+        // ═══════════════════════════════════════════════
+        // RENDER SOLID TUMOR PANELS
+        // ═══════════════════════════════════════════════
+        function renderPanels(data) {
+            const grid = document.getElementById('panelsGrid');
+            grid.innerHTML = '';
+
+            data.forEach((p, i) => {
+                const previewGenes = p.geneList.slice(0, 8);
+                const extra = p.geneList.length - 8;
+
+                const biomarkerTags = p.biomarkers.map(b => {
+                    const cls = b === 'HRD' ? 'hrd' : b.toLowerCase();
+                    return `<span class="meta-tag ${cls}">${b}${b === 'HRD' ? ' · PARPi' : ''}</span>`;
+                }).join('');
+
+                const card = document.createElement('div');
+                card.className = 'panel-card reveal';
+
+                card.innerHTML = `
+      <div class="panel-deco"></div>
+      <div class="panel-cancer-type"><div class="dot"></div>${p.cancer}</div>
+      <div class="panel-name">${p.name}</div>
+      <div class="panel-meta">
+        <span class="meta-tag genes">${p.genes} Genes</span>
+        ${biomarkerTags}
+      </div>
+      <div class="panel-gene-preview">
+        <div class="gene-preview-label">Selected Genes</div>
+        <div class="gene-chips">
+          ${previewGenes.map(g => `<span class="gene-chip">${g}</span>`).join('')}
+          ${extra > 0 ? `<span class="gene-chip-more">+${extra} more</span>` : ''}
+        </div>
+      </div>
+      <div class="panel-arrow">↗</div>
+    `;
+
+                card.addEventListener('click', () => openModal(p));
+                grid.appendChild(card);
+            });
+
+            requestAnimationFrame(() => {
+                document.querySelectorAll('.panel-card.reveal').forEach(el => {
+                    if (!el.classList.contains('visible')) observer.observe(el);
+                });
+            });
+        }
+
+        // ═══════════════════════════════════════════════
+        // FILTER
+        // ═══════════════════════════════════════════════
+        function scrollToSection(id, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            const target = document.getElementById(id);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        // ═══════════════════════════════════════════════
+        // MODAL
+        // ═══════════════════════════════════════════════
+        const overlay = document.getElementById('modalOverlay');
+
+        function openModal(p) {
+            document.getElementById('modalCancerType').textContent = p.cancer;
+            document.getElementById('modalTitle').textContent = p.name;
+
+            const tagsEl = document.getElementById('modalTags');
+            const pillMap = { TMB: 'modal-pill-tmb', MSI: 'modal-pill-msi', HRD: 'modal-pill-hrd' };
+
+            tagsEl.innerHTML = `<span class="modal-pill modal-pill-genes">${p.genes} Genes</span>`;
+            p.biomarkers.forEach(b => {
+                const cls = pillMap[b] || 'modal-pill-msi';
+                const label = b === 'HRD' ? 'HRD for PARPi' : b;
+                tagsEl.innerHTML += `<span class="modal-pill ${cls}">${label}</span>`;
+            });
+
+            const pct = Math.round((p.genes / 48) * 100);
+            const fill = document.getElementById('modalCoverageFill');
+            fill.style.width = '0%';
+            setTimeout(() => { fill.style.width = pct + '%'; }, 150);
+
+            const genesEl = document.getElementById('modalGenes');
+            genesEl.innerHTML = p.geneList.map(g => {
+                const isStarred = actionableGenes.has(g);
+                return `<span class="modal-gene${isStarred ? ' starred' : ''}">${g}</span>`;
+            }).join('');
+
+            const ihcLabel = document.getElementById('modalIHCLabel');
+            const ihcTests = document.getElementById('modalIHCTests');
+            const fishLabel = document.getElementById('modalFISHLabel');
+            const fishTests = document.getElementById('modalFISHTests');
+
+            if (p.ihc && p.ihc.length > 0) {
+                ihcLabel.style.display = '';
+                ihcTests.style.display = '';
+                ihcTests.innerHTML = p.ihc.map(t =>
+                    `<div class="modal-test"><div class="test-dot" style="background: #1a3b69; box-shadow: 0 0 0 3px rgba(26, 59, 105, 0.15);"></div>${t}</div>`
+                ).join('');
+            } else {
+                ihcLabel.style.display = 'none';
+                ihcTests.style.display = 'none';
+            }
+
+            if (p.fish && p.fish.length > 0) {
+                fishLabel.style.display = '';
+                fishTests.style.display = '';
+                fishTests.innerHTML = p.fish.map(t =>
+                    `<div class="modal-test"><div class="test-dot" style="background: #e84562; box-shadow: 0 0 0 3px rgba(232, 69, 98, 0.15);"></div>${t}</div>`
+                ).join('');
+            } else {
+                fishLabel.style.display = 'none';
+                fishTests.style.display = 'none';
+            }
+
+            document.getElementById('modalContent').scrollTop = 0;
+            overlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModalFn() {
+            overlay.classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closeModalFn();
+        });
+
+        document.querySelector('.modal-close').addEventListener('click', closeModalFn);
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeModalFn();
+        });
+
+        // ═══════════════════════════════════════════════
+        // WEBGL PARTICLES
+        // ═══════════════════════════════════════════════
+        class ParticleSystem {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.ctx = canvas.getContext('2d');
+                this.particles = [];
+                this.mouse = { x: -1000, y: -1000 };
+                this.hero = document.getElementById('hero');
+                this.resize();
+                this.init();
+                this.animate();
+
+                window.addEventListener('resize', () => this.resize());
+                this.hero.addEventListener('mousemove', (e) => {
+                    const rect = this.hero.getBoundingClientRect();
+                    this.mouse.x = e.clientX - rect.left;
+                    this.mouse.y = e.clientY - rect.top;
+                });
+                this.hero.addEventListener('mouseleave', () => {
+                    this.mouse.x = -1000;
+                    this.mouse.y = -1000;
+                });
+            }
+
+            resize() {
+                this.canvas.width = this.hero.offsetWidth;
+                this.canvas.height = this.hero.offsetHeight;
+            }
+
+            init() {
+                const colors = ['rgba(26, 59, 105, 0.15)', 'rgba(232, 69, 98, 0.12)', 'rgba(37, 88, 160, 0.1)', 'rgba(26, 59, 105, 0.08)'];
+                for (let i = 0; i < 60; i++) {
+                    this.particles.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        vx: (Math.random() - 0.5) * 0.5,
+                        vy: (Math.random() - 0.5) * 0.5,
+                        size: Math.random() * 4 + 1,
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        opacity: Math.random() * 0.5 + 0.2,
+                        pulseSpeed: Math.random() * 0.02 + 0.01,
+                        pulsePhase: Math.random() * Math.PI * 2
+                    });
+                }
+            }
+
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                const time = Date.now() * 0.001;
+
+                this.particles.forEach((p, i) => {
+                    const dx = this.mouse.x - p.x;
+                    const dy = this.mouse.y - p.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 200) {
+                        const force = (200 - dist) / 200 * 0.02;
+                        p.vx -= dx * force * 0.01;
+                        p.vy -= dy * force * 0.01;
+                    }
+
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vx *= 0.99;
+                    p.vy *= 0.99;
+
+                    if (p.x < 0) p.x = this.canvas.width;
+                    if (p.x > this.canvas.width) p.x = 0;
+                    if (p.y < 0) p.y = this.canvas.height;
+                    if (p.y > this.canvas.height) p.y = 0;
+
+                    const pulse = Math.sin(time * p.pulseSpeed * 10 + p.pulsePhase) * 0.3 + 0.7;
+                    const currentOpacity = p.opacity * pulse;
+
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    this.ctx.fillStyle = p.color.replace(')', `, ${currentOpacity})`).replace('rgba', 'rgba');
+                    this.ctx.fill();
+
+                    this.particles.forEach((p2, j) => {
+                        if (j <= i) return;
+                        const d = Math.sqrt((p.x - p2.x) ** 2 + (p.y - p2.y) ** 2);
+                        if (d < 150) {
+                            const opacity = (1 - d / 150) * 0.06;
+                            this.ctx.beginPath();
+                            this.ctx.moveTo(p.x, p.y);
+                            this.ctx.lineTo(p2.x, p2.y);
+                            this.ctx.strokeStyle = `rgba(26, 59, 105, ${opacity})`;
+                            this.ctx.lineWidth = 0.5;
+                            this.ctx.stroke();
+                        }
+                    });
+                });
+
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // ═══════════════════════════════════════════════
+        // MOUSE GRADIENT
+        // ═══════════════════════════════════════════════
+        class MouseGradient {
+            constructor() {
+                this.el = document.getElementById('mouseGradient');
+                this.hero = document.getElementById('hero');
+                this.pos = { x: 0, y: 0 };
+                this.target = { x: 0, y: 0 };
+                this.init();
+            }
+
+            init() {
+                this.hero.addEventListener('mousemove', (e) => {
+                    const rect = this.hero.getBoundingClientRect();
+                    this.target.x = e.clientX - rect.left;
+                    this.target.y = e.clientY - rect.top;
+                    this.el.style.opacity = '1';
+                });
+
+                this.hero.addEventListener('mouseleave', () => {
+                    this.el.style.opacity = '0';
+                });
+
+                this.animate();
+            }
+
+            animate() {
+                this.pos.x += (this.target.x - this.pos.x) * 0.05;
+                this.pos.y += (this.target.y - this.pos.y) * 0.05;
+                this.el.style.left = (this.pos.x - 300) + 'px';
+                this.el.style.top = (this.pos.y - 300) + 'px';
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // ═══════════════════════════════════════════════
+        // COUNTERS
+        // ═══════════════════════════════════════════════
+        function animateCounters() {
+            const counters = document.querySelectorAll('.counter');
+
+            const counterObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const el = entry.target;
+                        const target = parseInt(el.dataset.target);
+                        const duration = 2000;
+                        const start = performance.now();
+
+                        function update(currentTime) {
+                            const elapsed = currentTime - start;
+                            const progress = Math.min(elapsed / duration, 1);
+                            const eased = 1 - Math.pow(1 - progress, 5);
+                            const current = Math.round(eased * target);
+                            el.textContent = current;
+                            if (progress < 1) requestAnimationFrame(update);
+                        }
+
+                        requestAnimationFrame(update);
+                        counterObserver.unobserve(el);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            counters.forEach(c => counterObserver.observe(c));
+        }
+
+        // ═══════════════════════════════════════════════
+        // SCROLL & NAV
+        // ═══════════════════════════════════════════════
+        function updateScrollProgress() {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = (scrollTop / docHeight) * 100;
+            document.getElementById('scrollProgress').style.width = progress + '%';
+        }
+
+        function updateNavState() {
+            const nav = document.getElementById('mainNav');
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        }
+
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(() => {
+                    updateScrollProgress();
+                    updateNavState();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        // ═══════════════════════════════════════════════
+        // INTERSECTION OBSERVER
+        // ═══════════════════════════════════════════════
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.08,
+            rootMargin: '0px 0px -40px 0px'
+        });
+
+        // ═══════════════════════════════════════════════
+        // SMOOTH SCROLL
+        // ═══════════════════════════════════════════════
+        document.querySelectorAll('.nav-links a[href^="#"]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('nav-active'));
+                    link.classList.add('nav-active');
+                }
+            });
+        });
+
+        // ═══════════════════════════════════════════════
+        // INIT
+        // ═══════════════════════════════════════════════
+        document.addEventListener('DOMContentLoaded', () => {
+            new ParticleSystem(document.getElementById('heroCanvas'));
+            new MouseGradient();
+
+            renderPanels(panels);
+            renderHereditary();
+            renderHematology();
+            animateCounters();
+
+            updateScrollProgress();
+            updateNavState();
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>
